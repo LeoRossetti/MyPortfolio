@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvider";
+import { CustomCursor } from "@/components/layout/CustomCursor";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -73,8 +77,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-bg-base text-fg-primary">
-        {children}
+      <body className="flex min-h-full flex-col">
+        <SmoothScrollProvider>
+          <TooltipProvider delayDuration={200}>
+            <CustomCursor />
+            {children}
+            <Toaster position="bottom-right" richColors closeButton />
+          </TooltipProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
