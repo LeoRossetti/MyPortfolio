@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvider";
-import { CustomCursor } from "@/components/layout/CustomCursor";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,6 +27,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Leo Rossetti — Full-stack Developer",
     template: "%s · Leo Rossetti",
@@ -41,26 +44,31 @@ export const metadata: Metadata = {
     "React",
     "Next.js",
     "React Native",
-    "freelance developer",
+    "Node.js",
+    "Convex",
+    "Clerk",
   ],
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Leo Rossetti — Full-stack Developer",
     description:
-      "Full-stack developer. Ships products, not prototypes. Available for freelance.",
+      "Full-stack developer. Ships products, not prototypes.",
     type: "website",
     locale: "en_US",
+    url: siteUrl,
+    siteName: "Leo Rossetti",
   },
   twitter: {
     card: "summary_large_image",
     title: "Leo Rossetti — Full-stack Developer",
     description:
-      "Full-stack developer. Ships products, not prototypes. Available for freelance.",
+      "Full-stack developer. Ships products, not prototypes.",
   },
   robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07070a",
+  themeColor: "#0a0505",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -80,11 +88,12 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <SmoothScrollProvider>
           <TooltipProvider delayDuration={200}>
-            <CustomCursor />
             {children}
             <Toaster position="bottom-right" richColors closeButton />
           </TooltipProvider>
         </SmoothScrollProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

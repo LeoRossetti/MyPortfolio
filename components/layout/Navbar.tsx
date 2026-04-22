@@ -115,7 +115,7 @@ export function Navbar() {
               onClick={handleNavClick("contact")}
               className="hidden rounded-full bg-[var(--accent-primary)] px-3.5 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
             >
-              Hire me
+              Say hi
             </a>
             <button
               type="button"
