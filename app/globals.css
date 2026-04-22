@@ -6,22 +6,23 @@
 
 /* ---------- design tokens (permanent dark) ---------- */
 :root {
-  /* bespoke palette */
-  --bg-base: #07070a;
-  --bg-elevated: #0f0f15;
-  --bg-surface: #1a1a24;
+  /* bespoke palette — crimson/ember on near-black */
+  --bg-base: #0a0505;
+  --bg-elevated: #140909;
+  --bg-surface: #1f0d0d;
 
-  --fg-primary: #ededf2;
-  --fg-muted: #8a8a99;
-  --fg-dim: #5a5a6b;
+  --fg-primary: #f5ecec;
+  --fg-muted: #a28989;
+  --fg-dim: #5f4d4c;
 
-  --accent-primary: #7c5cff;
-  --accent-secondary: #00e5ff;
-  --accent-warn: #ff3d71;
+  --accent-primary: #ef4444; /* red-500 — bold, readable */
+  --accent-secondary: #f87171; /* red-400 — highlights, caret */
+  --accent-warn: #f59e0b; /* amber — rare contrast accent */
+  --accent-deep: #7f1d1d; /* red-900 — depth, wireframe, edges */
 
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --grid-line: rgba(124, 92, 255, 0.08);
+  --border-subtle: rgba(248, 113, 113, 0.08);
+  --border-strong: rgba(248, 113, 113, 0.18);
+  --grid-line: rgba(239, 68, 68, 0.06);
 
   --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
@@ -75,6 +76,7 @@
   --color-accent-primary: var(--accent-primary);
   --color-accent-secondary: var(--accent-secondary);
   --color-accent-warn: var(--accent-warn);
+  --color-accent-deep: var(--accent-deep);
 
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
@@ -162,15 +164,55 @@
 .bg-radial-glow {
   background:
     radial-gradient(
-      ellipse 80% 50% at 50% -10%,
-      rgba(124, 92, 255, 0.18),
+      ellipse 80% 55% at 50% -10%,
+      rgba(239, 68, 68, 0.22),
       transparent 70%
     ),
     radial-gradient(
       ellipse 60% 40% at 50% 110%,
-      rgba(0, 229, 255, 0.1),
+      rgba(127, 29, 29, 0.32),
       transparent 70%
     );
+}
+
+.bg-ember {
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 45%,
+      rgba(239, 68, 68, 0.25),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 90% 80% at 50% 100%,
+      rgba(127, 29, 29, 0.35),
+      transparent 60%
+    );
+}
+
+/* ---------- keyframes ---------- */
+@keyframes caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
 }
 
 /* ---------- reduced motion ---------- */
