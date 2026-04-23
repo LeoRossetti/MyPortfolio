@@ -7,9 +7,9 @@
 /* ---------- design tokens (permanent dark, monochrome) ---------- */
 :root {
   /* bespoke palette — black/white/grey, edgier and tech-oriented */
-  --bg-base: #0a0a0a; /* very dark grey, not pure black to avoid halation */
-  --bg-elevated: #141414;
-  --bg-surface: #1c1c1c;
+  --bg-base: #171717; /* dark grey — clearly not black, keeps halation low */
+  --bg-elevated: #222222;
+  --bg-surface: #2a2a2a;
 
   --fg-primary: #f5f5f5; /* near-white body text */
   --fg-muted: #a3a3a3; /* mid grey secondary */
@@ -18,7 +18,7 @@
   --accent-primary: #fafafa; /* off-white — CTAs, links, hot highlights */
   --accent-secondary: #d4d4d4; /* light grey — caret, subtle emphasis */
   --accent-warn: #737373; /* medium grey — kept as a fallback token */
-  --accent-deep: #2d2d2d; /* dark grey — gradient bottoms, depth */
+  --accent-deep: #363636; /* dark grey — gradient bottoms, depth */
 
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-strong: rgba(255, 255, 255, 0.14);
@@ -138,12 +138,19 @@
     color-scheme: dark;
     scroll-behavior: smooth;
     font-family: var(--font-sans);
+    /* Page bg lives on <html> so the fixed <SiteBackdrop> particles can
+       sit at z-index: -10 inside <body> and still be visible. If <body>
+       owned the bg, negative-z children would render behind it. */
+    background: var(--bg-base);
   }
   body {
-    background: var(--bg-base);
     color: var(--fg-primary);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    /* Transparent so the SiteBackdrop particles show through sections
+       that don't set their own opaque bg (StackStrip keeps its bg-bg-base
+       to remain a solid divider — that's deliberate). */
+    background: transparent;
   }
 }
 

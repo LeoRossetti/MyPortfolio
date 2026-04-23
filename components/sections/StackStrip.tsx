@@ -27,7 +27,7 @@ export function StackStrip() {
         gap={64}
         logoHeight={36}
         fadeOut
-        fadeOutColor="#0a0a0a"
+        fadeOutColor="#171717"
         scaleOnHover
         pauseOnHover
         ariaLabel="Technology stack"

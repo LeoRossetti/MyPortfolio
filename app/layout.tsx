@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvider";
 import { TerminalBoot } from "@/components/animation/TerminalBoot";
+import { SiteBackdrop } from "@/components/layout/SiteBackdrop";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -69,7 +70,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#171717",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -87,6 +88,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
+        <SiteBackdrop />
         <SmoothScrollProvider>
           <TooltipProvider delayDuration={200}>
             {children}

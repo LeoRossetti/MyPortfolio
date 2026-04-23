@@ -5,9 +5,12 @@ import { fadeUp, staggerChildren } from "@/lib/motion";
 
 /**
  * Bio-only About section. The stack display lives entirely in the
- * LogoLoop above; this section is purely "who I am / where I'm from /
- * what I do". Single-column, left-aligned prose — deliberately different
- * in layout from the grid-based sections that follow.
+ * LogoLoop above; the ambient particles backdrop is supplied site-wide
+ * by `<SiteBackdrop />` in the root layout — no per-section wrapper
+ * needed here.
+ *
+ * Single-column, left-aligned prose — deliberately different in layout
+ * from the grid-based sections that follow.
  */
 export function About() {
   return (
