@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import {
+  SiClerk,
   SiExpo,
   SiNextdotjs,
   SiNodedotjs,
@@ -9,6 +10,7 @@ import {
   SiTailwindcss,
   SiTypescript,
 } from "react-icons/si";
+import { ConvexIcon } from "@/components/icons/BrandIcons";
 
 export type TechLogo = {
   node: ReactNode;
@@ -35,7 +37,7 @@ export const techLogos: TechLogo[] = [
   },
   {
     node: <SiTailwindcss aria-hidden />,
-    title: "Tailwind CSS",
+    title: "Tailwind",
     href: "https://tailwindcss.com",
   },
   {
@@ -47,6 +49,16 @@ export const techLogos: TechLogo[] = [
     node: <SiNodedotjs aria-hidden />,
     title: "Node.js",
     href: "https://nodejs.org",
+  },
+  {
+    node: <ConvexIcon />,
+    title: "Convex",
+    href: "https://convex.dev",
+  },
+  {
+    node: <SiClerk aria-hidden />,
+    title: "Clerk",
+    href: "https://clerk.com",
   },
   {
     node: <SiPython aria-hidden />,

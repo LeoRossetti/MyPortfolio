@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import dynamic from "next/dynamic";
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import TextType from "@/components/reactbits/TextType";
 import { heroCopy } from "@/lib/data/hero";
 
 // Heavy (three + custom shader + image texture). Keep it out of the initial
@@ -14,14 +16,34 @@ const GridDistortion = dynamic(
 // Seeded greyscale Picsum — stable across loads so the backdrop isn't
 // random each refresh. Swap to a local /public image path once Leo has
 // one he wants to use.
-const HERO_IMAGE = "https://picsum.photos/seed/leo-portfolio/1920/1080?grayscale";
+const HERO_IMAGE =
+  "https://picsum.photos/seed/leo-portfolio/1920/1080?grayscale";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+
+  // Scroll-coupled transform: name + tagline gently shrink, drift up, and
+  // fade as the user scrolls past the hero. "start start" → "end start"
+  // = 0 while the hero is fully visible, 1 when its top meets the top of
+  // the viewport (i.e. fully scrolled out).
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const contentOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.6, 1],
+    [1, 0.55, 0.1],
+  );
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+
   return (
     <section
       id="home"
+      ref={heroRef}
       className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden pt-16 pb-28 lg:pt-20 lg:pb-36"
     >
       {/* Grid-distorted greyscale image as the backdrop (React Bits). The
@@ -49,16 +71,32 @@ export function Hero() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_50%,var(--bg-base)_100%)]" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-6 text-center lg:px-10">
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease }}
-          className="text-fg-primary font-display text-[clamp(3.75rem,12vw,9.5rem)] leading-[0.88] font-bold tracking-[-0.055em]"
-        >
-          <span className="block">Leo</span>
-          <span className="block">Rossetti</span>
-        </motion.h1>
+      {/* Scroll-linked wrapper: scales/fades/lifts the content as user
+          scrolls out. The inner h1 and tagline keep their own mount-in
+          animations on top. */}
+      <motion.div
+        style={{
+          scale: contentScale,
+          opacity: contentOpacity,
+          y: contentY,
+        }}
+        className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-6 text-center lg:px-10"
+      >
+        {/* Typed name — TextType from React Bits. initialDelay waits out the
+            TerminalBoot overlay (~1.5s) so the typing plays AFTER the wipe
+            instead of behind it. */}
+        <TextType
+          as="h1"
+          text="Leo Rossetti"
+          typingSpeed={75}
+          initialDelay={1800}
+          loop={false}
+          showCursor
+          hideCursorOnDone
+          cursorBlinkDuration={0.55}
+          className="text-fg-primary font-display text-[clamp(3rem,10vw,9rem)] leading-[0.9] font-bold whitespace-nowrap tracking-[-0.055em]"
+          cursorClassName="text-fg-muted"
+        />
 
         <motion.p
           initial={{ opacity: 0, y: 16 }}
@@ -69,7 +107,7 @@ export function Hero() {
           <span className="text-fg-primary">Full-stack developer.</span>{" "}
           {heroCopy.tagline}
         </motion.p>
-      </div>
+      </motion.div>
 
       {/* Scroll affordance */}
       <motion.div

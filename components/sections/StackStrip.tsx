@@ -8,9 +8,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 /**
  * Marquee strip of tech-stack logos that sits between Hero and About.
- * Above-the-fold stack signal for recruiters/clients without bloating the
- * hero composition. Logo-level hover brightens icons from muted grey to
- * near-white (see LogoLoop.css).
+ * Above-the-fold stack signal without bloating the hero composition.
+ * Logo-level hover brightens icons from muted grey to near-white.
  */
 export function StackStrip() {
   return (
