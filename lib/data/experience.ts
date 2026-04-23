@@ -31,8 +31,8 @@ export const experience: ExperienceEntry[] = [
       "Shipping TypeScript — frontend, backend, and the integrations that glue them together.",
       "Partnering with design to keep the UI consistent across platforms.",
     ],
-    tech: ["TypeScript", "Next.js", "React Native", "Node.js"],
-    url: "https://dealfuel.ai",
+    tech: ["TypeScript", "React", "Next.js", "React Native", "Convex", "Clerk", "Node.js"],
+    url: "https://roles.dealfuel.ai",
   },
 ];
 

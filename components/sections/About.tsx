@@ -1,31 +1,42 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { fadeUp, staggerChildren } from "@/lib/motion";
 
 /**
- * Bio-only About section. The stack display lives entirely in the
- * LogoLoop above; the ambient particles backdrop is supplied site-wide
- * by `<SiteBackdrop />` in the root layout — no per-section wrapper
- * needed here.
+ * Bio-only About section. Matches the container width of every other
+ * content section (`max-w-6xl`) so the left edge aligns; prose inside
+ * is capped to `max-w-2xl` for readability (~65ch line length).
  *
- * Single-column, left-aligned prose — deliberately different in layout
- * from the grid-based sections that follow.
+ * Single-column, left-aligned — deliberately different in layout from
+ * the grid-based sections that follow. Each block staggers in on its
+ * own beat; the eyebrow drifts at half speed as the section scrolls.
  */
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const eyebrowY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
   return (
     <section
       id="about"
-      className="relative mx-auto w-full max-w-3xl px-6 py-24 lg:px-10 lg:py-36"
+      ref={sectionRef}
+      className="relative mx-auto w-full max-w-6xl px-6 py-24 lg:px-10 lg:py-32"
     >
       <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
         variants={staggerChildren(0.12)}
+        className="max-w-2xl"
       >
         <motion.p
           variants={fadeUp}
+          style={{ y: eyebrowY }}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
           {`// about`}
@@ -38,20 +49,22 @@ export function About() {
           Hi, I&apos;m Leo.
         </motion.h2>
 
-        <motion.div
+        <motion.p
           variants={fadeUp}
-          className="text-fg-muted mt-8 space-y-5 text-base leading-relaxed sm:text-lg"
+          className="text-fg-muted mt-8 text-base leading-relaxed sm:text-lg"
         >
-          <p>
-            A full-stack developer from{" "}
-            <span className="text-fg-primary">Brazil</span>, three years into
-            the craft. I like shipping whole products end-to-end — the data
-            model, the backend, the UI, the polish — not just prototypes.
-          </p>
-          <p className="text-fg-dim font-mono text-sm tracking-wide">
-            Remote · always shipping
-          </p>
-        </motion.div>
+          A full-stack developer from{" "}
+          <span className="text-fg-primary">Brazil</span>, three years into
+          the craft. I like shipping whole products end-to-end — the data
+          model, the backend, the UI, the polish — not just prototypes.
+        </motion.p>
+
+        <motion.p
+          variants={fadeUp}
+          className="text-fg-dim mt-5 font-mono text-sm tracking-wide"
+        >
+          Remote · always shipping
+        </motion.p>
       </motion.div>
     </section>
   );

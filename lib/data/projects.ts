@@ -31,7 +31,7 @@ export const projects: Project[] = [
       // TODO Leo: replace these with real URLs when ready
       { label: "GitHub", href: "https://github.com/LeoRossetti", kind: "github" },
     ],
-    colSpan: "lg:col-span-7",
+    colSpan: "lg:col-span-8",
   },
   {
     id: "next-1",
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     description: "Next project — details soon.",
     tech: ["TBA"],
     status: "in-progress",
-    colSpan: "lg:col-span-5",
+    colSpan: "lg:col-span-4",
   },
   {
     id: "next-2",
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     description: "Next project — details soon.",
     tech: ["TBA"],
     status: "coming-soon",
-    colSpan: "lg:col-span-5",
+    colSpan: "lg:col-span-6",
   },
   {
     id: "next-3",
@@ -55,7 +55,7 @@ export const projects: Project[] = [
     description: "Next project — details soon.",
     tech: ["TBA"],
     status: "coming-soon",
-    colSpan: "lg:col-span-7",
+    colSpan: "lg:col-span-6",
   },
 ];
 

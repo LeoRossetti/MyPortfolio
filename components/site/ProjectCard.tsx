@@ -4,6 +4,7 @@ import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/icons/BrandIcons";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data/projects";
+import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   project: Project;
@@ -20,7 +21,7 @@ export function ProjectCard({ project, className }: Props) {
       target={primaryLink ? "_blank" : undefined}
       rel={primaryLink ? "noopener noreferrer" : undefined}
       className={cn(
-        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
+        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
         className,
       )}
     >
@@ -55,12 +56,7 @@ export function ProjectCard({ project, className }: Props) {
         <div className="mt-auto pt-5">
           <ul className="flex flex-wrap gap-2">
             {tech.map((t) => (
-              <li
-                key={t}
-                className="border-border-subtle text-fg-dim bg-bg-base/40 rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-wide"
-              >
-                {t}
-              </li>
+              <TechChip key={t} name={t} tone="base" />
             ))}
           </ul>
 

@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/lib/data/services";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
+import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   service: Service;
@@ -61,7 +62,7 @@ export function ServiceCard({ service, className }: Props) {
       }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       className={cn(
-        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative flex min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
+        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
         className,
       )}
     >
@@ -96,12 +97,7 @@ export function ServiceCard({ service, className }: Props) {
       <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3">
         <ul className="flex flex-wrap gap-2">
           {tech.map((t) => (
-            <li
-              key={t}
-              className="border-border-subtle text-fg-dim bg-bg-base/40 rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-wide"
-            >
-              {t}
-            </li>
+            <TechChip key={t} name={t} tone="base" />
           ))}
         </ul>
         <span

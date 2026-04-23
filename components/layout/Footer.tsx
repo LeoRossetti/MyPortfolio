@@ -18,7 +18,7 @@ export function Footer() {
             © {year} {siteConfig.name}. Built with Next.js, Motion &amp;
             Three.js.
           </p>
-          <p className="text-fg-dim font-mono text-[10px] tracking-[0.15em] uppercase">
+          <p className="text-fg-dim font-mono text-[11px] tracking-[0.15em] uppercase">
             — always shipping
           </p>
         </div>

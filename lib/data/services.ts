@@ -18,7 +18,7 @@ export const services: Service[] = [
     pitch:
       "Next.js apps with real backends, auth, and deploy pipelines. Where most of my time goes.",
     icon: Code,
-    tech: ["Next.js", "TypeScript", "Convex", "Clerk", "Tailwind"],
+    tech: ["React", "Next.js", "TypeScript", "Convex", "Clerk", "Tailwind"],
     colSpan: "lg:col-span-8",
   },
   {

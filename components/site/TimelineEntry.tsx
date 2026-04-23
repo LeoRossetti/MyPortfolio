@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { ExperienceEntry } from "@/lib/data/experience";
 import { easeOutQuart } from "@/lib/motion";
+import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   entry: ExperienceEntry;
@@ -18,32 +19,13 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
 
   return (
     <motion.article
-      initial={{ opacity: 0, x: 20 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.7, ease: easeOutQuart }}
-      className={cn("relative pl-10 sm:pl-14", className)}
+      className={cn("relative", className)}
     >
-      {/* Node on the timeline */}
-      <div
-        aria-hidden
-        className="absolute top-1 left-0 flex size-6 items-center justify-center sm:size-8"
-      >
-        <span
-          className={cn(
-            "bg-accent-primary absolute size-2.5 rounded-full",
-            isCurrent && "shadow-[0_0_14px_var(--accent-primary)]",
-          )}
-        />
-        {isCurrent && (
-          <span
-            aria-hidden
-            className="border-accent-primary/40 absolute size-6 animate-ping rounded-full border sm:size-7"
-          />
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
         <h3 className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl">
           {role}{" "}
           <span className="text-fg-muted">@ </span>
@@ -66,17 +48,23 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
           <span className="text-fg-dim">→</span>
           <span
             className={cn(
-              "text-fg-muted",
+              "text-fg-muted inline-flex items-center gap-1.5",
               end === "Present" && "text-accent-primary",
             )}
           >
+            {isCurrent && (
+              <span
+                aria-hidden
+                className="bg-accent-primary size-1.5 animate-pulse rounded-full shadow-[0_0_8px_var(--accent-primary)]"
+              />
+            )}
             {end}
           </span>
         </div>
       </div>
 
       {location && (
-        <p className="text-fg-dim mt-1 font-mono text-[11px] tracking-wide uppercase">
+        <p className="text-fg-dim mt-1 font-mono text-xs tracking-wide uppercase">
           {location}
         </p>
       )}
@@ -103,12 +91,7 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
       {tech.length > 0 && (
         <ul className="mt-5 flex flex-wrap gap-2">
           {tech.map((t) => (
-            <li
-              key={t}
-              className="border-border-subtle text-fg-dim bg-bg-elevated/40 rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-wide"
-            >
-              {t}
-            </li>
+            <TechChip key={t} name={t} tone="elevated" />
           ))}
         </ul>
       )}

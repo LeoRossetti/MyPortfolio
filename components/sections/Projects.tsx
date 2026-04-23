@@ -47,7 +47,7 @@ export function Projects() {
         whileInView="show"
         viewport={{ once: true, amount: 0.12 }}
         variants={staggerChildren(0.08)}
-        className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-5"
+        className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6"
       >
         {projects.map((project) => (
           <motion.div

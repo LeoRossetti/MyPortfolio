@@ -15,7 +15,7 @@ export function PlaceholderProjectCard({ project, className }: Props) {
     <div
       aria-label={`${project.title} — ${label}`}
       className={cn(
-        "bg-bg-elevated/40 border-border-subtle relative flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 sm:p-8",
+        "bg-bg-elevated/40 border-border-subtle relative isolate flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 sm:p-8",
         className,
       )}
     >
@@ -37,7 +37,7 @@ export function PlaceholderProjectCard({ project, className }: Props) {
             aria-hidden
             className="size-1.5 animate-pulse rounded-full bg-[var(--accent-warn)] shadow-[0_0_8px_var(--accent-warn)]"
           />
-          <span className="text-fg-dim font-mono text-[10px] tracking-[0.2em] uppercase">
+          <span className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase">
             {label}
           </span>
         </div>
@@ -54,7 +54,7 @@ export function PlaceholderProjectCard({ project, className }: Props) {
             {[0, 1, 2].map((i) => (
               <li
                 key={i}
-                className="bg-bg-surface/60 h-[22px] w-[72px] animate-pulse rounded-full"
+                className="bg-bg-surface/60 h-[28px] w-[88px] animate-pulse rounded-full"
                 style={{ animationDelay: `${i * 150}ms` }}
               />
             ))}
