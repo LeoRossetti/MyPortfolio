@@ -24,11 +24,11 @@ export function ProjectCard({ project, className }: Props) {
         className,
       )}
     >
-      {/* Media placeholder — gradient wash if no real screenshot yet */}
+      {/* Media placeholder — monochrome wash if no real screenshot yet */}
       <div className="border-border-subtle bg-bg-base/50 relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-lg border">
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(239,68,68,0.35),transparent_70%),radial-gradient(ellipse_60%_40%_at_0%_0%,rgba(127,29,29,0.4),transparent_70%)]"
+          className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_100%,rgba(255,255,255,0.12),transparent_70%),radial-gradient(ellipse_60%_40%_at_0%_0%,rgba(255,255,255,0.06),transparent_70%)]"
         />
         <div className="bg-grid absolute inset-0 opacity-50" />
         <div className="absolute inset-0 flex items-center justify-center">

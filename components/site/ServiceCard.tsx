@@ -46,7 +46,7 @@ export function ServiceCard({ service, className }: Props) {
     rotY.set(0);
   };
 
-  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}% ${mouseY}%, rgba(239,68,68,0.18), transparent 70%)`;
+  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}% ${mouseY}%, rgba(255,255,255,0.1), transparent 70%)`;
 
   return (
     <motion.div
@@ -77,7 +77,7 @@ export function ServiceCard({ service, className }: Props) {
         aria-hidden
         className={cn(
           "pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-          "[background:linear-gradient(120deg,transparent,rgba(239,68,68,0.35),transparent)] [mask:linear-gradient(#fff,#fff)_content-box,linear-gradient(#fff,#fff)] [mask-composite:exclude] p-px",
+          "[background:linear-gradient(120deg,transparent,rgba(255,255,255,0.22),transparent)] [mask:linear-gradient(#fff,#fff)_content-box,linear-gradient(#fff,#fff)] [mask-composite:exclude] p-px",
         )}
       />
 

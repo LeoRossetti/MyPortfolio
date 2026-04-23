@@ -3,15 +3,16 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { navSections, siteConfig } from "@/lib/data/nav";
+import { navSections } from "@/lib/data/nav";
 
 export function Navbar() {
   const [activeId, setActiveId] = useState<string>(navSections[0]?.id ?? "");
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Glass-on-scroll: transparent while the hero is in view, glassy past it.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -22,7 +23,6 @@ export function Navbar() {
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => !!el);
-
     if (elements.length === 0) return;
 
     const observer = new IntersectionObserver(
@@ -51,123 +51,97 @@ export function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -20, opacity: 0 }}
+      initial={{ y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, delay: 0.2 }}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[padding,background] duration-300",
-        scrolled ? "py-2" : "py-4",
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+        scrolled
+          ? "border-border-subtle bg-bg-base/70 border-b backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
       )}
     >
-      <div className="mx-auto w-full max-w-6xl px-4 lg:px-8">
-        <nav
-          className={cn(
-            "flex items-center justify-between rounded-full border px-4 py-2.5 backdrop-blur-xl transition-all",
-            scrolled
-              ? "border-border-subtle bg-bg-base/70 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
-              : "border-transparent bg-transparent",
-          )}
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-10">
+        {/* Left: mono label. No more logo mark, no more name — hero owns that. */}
+        <a
+          href="#home"
+          onClick={handleNavClick("home")}
+          className="text-fg-muted hover:text-fg-primary font-mono text-base tracking-wide transition-colors"
         >
-          <a
-            href="#home"
-            onClick={handleNavClick("home")}
-            className="font-display flex items-center gap-2 text-sm font-semibold tracking-tight"
-          >
-            <span className="relative grid size-6 place-items-center overflow-hidden rounded-md bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] text-[11px] font-bold text-black">
-              L
-            </span>
-            <span className="hidden sm:inline">{siteConfig.name}</span>
-          </a>
+          <span className="text-fg-dim">{"// "}</span>portfolio
+        </a>
 
-          <ul className="hidden items-center gap-1 md:flex">
-            {navSections.slice(1).map((section) => (
-              <li key={section.id}>
-                <a
-                  href={`#${section.id}`}
-                  onClick={handleNavClick(section.id)}
-                  className={cn(
-                    "relative rounded-full px-3 py-1.5 text-xs font-medium tracking-wide transition-colors",
-                    activeId === section.id
-                      ? "text-fg-primary"
-                      : "text-fg-muted hover:text-fg-primary",
-                  )}
-                >
-                  {activeId === section.id && (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-full bg-[var(--bg-surface)]"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  {section.label}
-                </a>
-              </li>
-            ))}
-          </ul>
+        {/* Desktop nav — lowercase mono links, no pill container, just text. */}
+        <ul className="hidden items-center gap-7 font-mono md:flex">
+          {navSections.slice(1).map((section) => (
+            <li key={section.id}>
+              <a
+                href={`#${section.id}`}
+                onClick={handleNavClick(section.id)}
+                className={cn(
+                  "text-base transition-colors",
+                  activeId === section.id
+                    ? "text-fg-primary"
+                    : "text-fg-muted hover:text-fg-primary",
+                )}
+              >
+                {section.label.toLowerCase()}
+              </a>
+            </li>
+          ))}
+        </ul>
 
-          <div className="flex items-center gap-2">
-            <a
-              href="#contact"
-              onClick={handleNavClick("contact")}
-              className="hidden rounded-full bg-[var(--accent-primary)] px-3.5 py-1.5 text-xs font-semibold text-white transition hover:brightness-110 md:inline-flex"
-            >
-              Say hi
-            </a>
-            <button
-              type="button"
-              aria-label="Toggle menu"
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen((v) => !v)}
-              className="border-border-subtle flex size-9 items-center justify-center rounded-full border md:hidden"
-            >
-              <div className="flex flex-col gap-1">
-                <span
-                  className={cn(
-                    "bg-fg-primary h-px w-4 transition",
-                    mobileOpen && "translate-y-[3px] rotate-45",
-                  )}
-                />
-                <span
-                  className={cn(
-                    "bg-fg-primary h-px w-4 transition",
-                    mobileOpen && "-translate-y-[2px] -rotate-45",
-                  )}
-                />
-              </div>
-            </button>
+        {/* Mobile trigger */}
+        <button
+          type="button"
+          aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((v) => !v)}
+          className="border-border-subtle flex size-9 items-center justify-center rounded-md border md:hidden"
+        >
+          <div className="flex flex-col gap-1">
+            <span
+              className={cn(
+                "bg-fg-primary h-px w-4 transition",
+                mobileOpen && "translate-y-[3px] rotate-45",
+              )}
+            />
+            <span
+              className={cn(
+                "bg-fg-primary h-px w-4 transition",
+                mobileOpen && "-translate-y-[2px] -rotate-45",
+              )}
+            />
           </div>
-        </nav>
-
-        {mobileOpen && (
-          <motion.ul
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="border-border-subtle bg-bg-elevated mt-2 flex flex-col gap-1 rounded-2xl border p-3 md:hidden"
-          >
-            {navSections.slice(1).map((section) => (
-              <li key={section.id}>
-                <a
-                  href={`#${section.id}`}
-                  onClick={handleNavClick(section.id)}
-                  className={cn(
-                    "block rounded-lg px-3 py-2 text-sm",
-                    activeId === section.id
-                      ? "text-fg-primary bg-[var(--bg-surface)]"
-                      : "text-fg-muted",
-                  )}
-                >
-                  {section.label}
-                </a>
-              </li>
-            ))}
-          </motion.ul>
-        )}
+        </button>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <motion.ul
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          className="border-border-subtle bg-bg-base/90 flex flex-col gap-1 border-b px-6 pb-6 font-mono backdrop-blur-xl md:hidden"
+        >
+          {navSections.slice(1).map((section) => (
+            <li key={section.id}>
+              <a
+                href={`#${section.id}`}
+                onClick={handleNavClick(section.id)}
+                className={cn(
+                  "block rounded-md px-2 py-2 text-base",
+                  activeId === section.id
+                    ? "text-fg-primary"
+                    : "text-fg-muted",
+                )}
+              >
+                {section.label.toLowerCase()}
+              </a>
+            </li>
+          ))}
+        </motion.ul>
+      )}
     </motion.header>
   );
 }

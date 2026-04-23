@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvider";
+import { TerminalBoot } from "@/components/animation/TerminalBoot";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -68,7 +69,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0505",
+  themeColor: "#0a0a0a",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -92,6 +93,7 @@ export default function RootLayout({
             <Toaster position="bottom-right" richColors closeButton />
           </TooltipProvider>
         </SmoothScrollProvider>
+        <TerminalBoot />
         <Analytics />
         <SpeedInsights />
       </body>

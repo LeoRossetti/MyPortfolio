@@ -24,7 +24,7 @@ export function PlaceholderProjectCard({ project, className }: Props) {
         <div className="bg-grid absolute inset-0 opacity-30" />
         <div
           aria-hidden
-          className="absolute inset-y-0 -left-1/3 w-1/3 animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[rgba(239,68,68,0.08)] to-transparent"
+          className="absolute inset-y-0 -left-1/3 w-1/3 animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent"
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <Lock className="text-fg-dim size-7" strokeWidth={1.5} />

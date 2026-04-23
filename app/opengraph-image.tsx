@@ -17,8 +17,8 @@ export default function OpenGraphImage() {
           justifyContent: "space-between",
           padding: 80,
           background:
-            "radial-gradient(ellipse 70% 60% at 50% 100%, #7f1d1d, transparent 70%), radial-gradient(ellipse 50% 40% at 10% 0%, #450a0a, transparent 70%), #0a0505",
-          color: "#f5ecec",
+            "radial-gradient(ellipse 70% 60% at 50% 100%, rgba(255,255,255,0.08), transparent 70%), radial-gradient(ellipse 50% 40% at 10% 0%, rgba(255,255,255,0.05), transparent 70%), #0a0a0a",
+          color: "#f5f5f5",
           fontFamily: "sans-serif",
         }}
       >
@@ -30,7 +30,7 @@ export default function OpenGraphImage() {
             fontSize: 22,
             letterSpacing: 6,
             textTransform: "uppercase",
-            color: "#a28989",
+            color: "#a3a3a3",
           }}
         >
           <span
@@ -38,8 +38,8 @@ export default function OpenGraphImage() {
               width: 10,
               height: 10,
               borderRadius: 9999,
-              background: "#ef4444",
-              boxShadow: "0 0 24px #ef4444",
+              background: "#fafafa",
+              boxShadow: "0 0 24px rgba(255,255,255,0.7)",
             }}
           />
           leorossetti.dev
@@ -56,10 +56,20 @@ export default function OpenGraphImage() {
               letterSpacing: -6,
             }}
           >
-            <span style={{ color: "#f5ecec" }}>Leo</span>
             <span
               style={{
-                background: "linear-gradient(to bottom right, #f5ecec, #ef4444, #7f1d1d)",
+                background:
+                  "linear-gradient(to bottom, #ffffff, #d4d4d4 60%, #525252)",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              Leo
+            </span>
+            <span
+              style={{
+                background:
+                  "linear-gradient(to bottom, #ffffff, #d4d4d4 60%, #525252)",
                 backgroundClip: "text",
                 color: "transparent",
               }}
@@ -70,7 +80,7 @@ export default function OpenGraphImage() {
           <div
             style={{
               fontSize: 32,
-              color: "#a28989",
+              color: "#a3a3a3",
               maxWidth: 900,
               display: "flex",
             }}
@@ -84,7 +94,7 @@ export default function OpenGraphImage() {
             display: "flex",
             gap: 16,
             fontSize: 20,
-            color: "#a28989",
+            color: "#a3a3a3",
             fontFamily: "monospace",
           }}
         >
@@ -95,9 +105,9 @@ export default function OpenGraphImage() {
                 style={{
                   display: "flex",
                   padding: "8px 16px",
-                  border: "1px solid rgba(248, 113, 113, 0.2)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
                   borderRadius: 9999,
-                  background: "rgba(20, 9, 9, 0.6)",
+                  background: "rgba(20, 20, 20, 0.6)",
                 }}
               >
                 {t}

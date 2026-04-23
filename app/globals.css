@@ -4,25 +4,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------- design tokens (permanent dark) ---------- */
+/* ---------- design tokens (permanent dark, monochrome) ---------- */
 :root {
-  /* bespoke palette — crimson/ember on near-black */
-  --bg-base: #0a0505;
-  --bg-elevated: #140909;
-  --bg-surface: #1f0d0d;
+  /* bespoke palette — black/white/grey, edgier and tech-oriented */
+  --bg-base: #0a0a0a; /* very dark grey, not pure black to avoid halation */
+  --bg-elevated: #141414;
+  --bg-surface: #1c1c1c;
 
-  --fg-primary: #f5ecec;
-  --fg-muted: #a28989;
-  --fg-dim: #5f4d4c;
+  --fg-primary: #f5f5f5; /* near-white body text */
+  --fg-muted: #a3a3a3; /* mid grey secondary */
+  --fg-dim: #525252; /* darker grey tertiary */
 
-  --accent-primary: #ef4444; /* red-500 — bold, readable */
-  --accent-secondary: #f87171; /* red-400 — highlights, caret */
-  --accent-warn: #f59e0b; /* amber — rare contrast accent */
-  --accent-deep: #7f1d1d; /* red-900 — depth, wireframe, edges */
+  --accent-primary: #fafafa; /* off-white — CTAs, links, hot highlights */
+  --accent-secondary: #d4d4d4; /* light grey — caret, subtle emphasis */
+  --accent-warn: #737373; /* medium grey — kept as a fallback token */
+  --accent-deep: #2d2d2d; /* dark grey — gradient bottoms, depth */
 
-  --border-subtle: rgba(248, 113, 113, 0.08);
-  --border-strong: rgba(248, 113, 113, 0.18);
-  --grid-line: rgba(239, 68, 68, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --grid-line: rgba(255, 255, 255, 0.04);
 
   --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
@@ -35,7 +35,7 @@
   --popover: var(--bg-elevated);
   --popover-foreground: var(--fg-primary);
   --primary: var(--accent-primary);
-  --primary-foreground: #ffffff;
+  --primary-foreground: var(--bg-base);
   --secondary: var(--bg-surface);
   --secondary-foreground: var(--fg-primary);
   --muted: var(--bg-surface);
@@ -57,7 +57,7 @@
   --sidebar: var(--bg-elevated);
   --sidebar-foreground: var(--fg-primary);
   --sidebar-primary: var(--accent-primary);
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary-foreground: var(--bg-base);
   --sidebar-accent: var(--bg-surface);
   --sidebar-accent-foreground: var(--fg-primary);
   --sidebar-border: var(--border-subtle);
@@ -165,28 +165,24 @@
   background:
     radial-gradient(
       ellipse 80% 55% at 50% -10%,
-      rgba(239, 68, 68, 0.22),
+      rgba(255, 255, 255, 0.08),
       transparent 70%
     ),
     radial-gradient(
       ellipse 60% 40% at 50% 110%,
-      rgba(127, 29, 29, 0.32),
+      rgba(255, 255, 255, 0.04),
       transparent 70%
     );
 }
 
-.bg-ember {
-  background:
-    radial-gradient(
-      ellipse 70% 60% at 50% 45%,
-      rgba(239, 68, 68, 0.25),
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 90% 80% at 50% 100%,
-      rgba(127, 29, 29, 0.35),
-      transparent 60%
-    );
+.bg-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(255, 255, 255, 0.015) 2px,
+    rgba(255, 255, 255, 0.015) 3px
+  );
 }
 
 /* ---------- keyframes ---------- */
@@ -215,6 +211,7 @@
   }
 }
 
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -235,3 +232,4 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
