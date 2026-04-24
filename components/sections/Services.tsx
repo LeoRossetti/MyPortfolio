@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { ServiceCard } from "@/components/site/ServiceCard";
-import { services, servicesCopy } from "@/lib/data/services";
+import { services, servicesCopy, type Service } from "@/lib/data/services";
 import { fadeUp, staggerChildren } from "@/lib/motion";
 
 export function Services() {
@@ -46,18 +47,51 @@ export function Services() {
         whileInView="show"
         viewport={{ once: true, amount: 0.15 }}
         variants={staggerChildren(0.08)}
-        className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-5"
+        className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6"
       >
         {services.map((service) => (
-          <motion.div
-            key={service.id}
-            variants={fadeUp}
-            className={service.colSpan}
-          >
-            <ServiceCard service={service} />
-          </motion.div>
+          <ServiceCardItem key={service.id} service={service} />
         ))}
       </motion.div>
     </section>
+  );
+}
+
+/**
+ * Per-card wrapper. Ref sits on the OUTER plain div so `getBoundingClientRect`
+ * (which is what `useScroll` reads) stays stable — transformed targets
+ * can cause scroll progress to drift or freeze.
+ *
+ *   - `scale` pops from 0.96 → 1 as the card enters and settles back to
+ *     0.98 on the way out, giving each card a subtle breath.
+ *   - `x` applies a soft horizontal parallax to the wide (`col-span-8`)
+ *     cards only — ~16px drift across the full scroll journey.
+ */
+function ServiceCardItem({ service }: { service: Service }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.7, 1],
+    [0.96, 1, 1, 0.98],
+  );
+
+  const isWide = service.colSpan.includes("col-span-8");
+  const x = useTransform(scrollYProgress, [0, 1], isWide ? [-8, 8] : [0, 0]);
+
+  return (
+    <div ref={ref} className={service.colSpan}>
+      <motion.div
+        variants={fadeUp}
+        style={{ scale, x }}
+        className="h-full"
+      >
+        <ServiceCard service={service} />
+      </motion.div>
+    </div>
   );
 }

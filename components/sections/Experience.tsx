@@ -1,21 +1,11 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { motion } from "motion/react";
 import { TimelineEntry } from "@/components/site/TimelineEntry";
 import { experience, experienceCopy } from "@/lib/data/experience";
 import { fadeUp, staggerChildren } from "@/lib/motion";
 
 export function Experience() {
-  const railRef = useRef<HTMLDivElement>(null);
-
-  // Draw the timeline line as the section scrolls into view
-  const { scrollYProgress } = useScroll({
-    target: railRef,
-    offset: ["start 80%", "end 40%"],
-  });
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
   return (
     <section
       id="experience"
@@ -45,28 +35,14 @@ export function Experience() {
         </motion.h2>
       </motion.div>
 
-      <div ref={railRef} className="relative max-w-3xl">
-        {/* Static rail */}
-        <span
-          aria-hidden
-          className="bg-border-subtle absolute top-0 bottom-0 left-[5px] w-px sm:left-[11px]"
-        />
-        {/* Animated draw-in rail */}
-        <motion.span
-          aria-hidden
-          style={{ height: lineHeight }}
-          className="absolute top-0 left-[5px] w-px bg-gradient-to-b from-[var(--accent-primary)] via-[var(--accent-primary)] to-transparent sm:left-[11px]"
-        />
-
-        <div className="space-y-16">
-          {experience.map((entry, i) => (
-            <TimelineEntry
-              key={entry.id}
-              entry={entry}
-              isCurrent={entry.end === "Present" && i === 0}
-            />
-          ))}
-        </div>
+      <div className="max-w-3xl space-y-12">
+        {experience.map((entry, i) => (
+          <TimelineEntry
+            key={entry.id}
+            entry={entry}
+            isCurrent={entry.end === "Present" && i === 0}
+          />
+        ))}
       </div>
     </section>
   );

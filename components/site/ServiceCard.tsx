@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/lib/data/services";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
+import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   service: Service;
@@ -46,7 +47,7 @@ export function ServiceCard({ service, className }: Props) {
     rotY.set(0);
   };
 
-  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}% ${mouseY}%, rgba(239,68,68,0.18), transparent 70%)`;
+  const spotlight = useMotionTemplate`radial-gradient(220px circle at ${mouseX}% ${mouseY}%, rgba(255,255,255,0.1), transparent 70%)`;
 
   return (
     <motion.div
@@ -61,7 +62,7 @@ export function ServiceCard({ service, className }: Props) {
       }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       className={cn(
-        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative flex min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
+        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:min-h-[240px] sm:p-8",
         className,
       )}
     >
@@ -77,13 +78,26 @@ export function ServiceCard({ service, className }: Props) {
         aria-hidden
         className={cn(
           "pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100",
-          "[background:linear-gradient(120deg,transparent,rgba(239,68,68,0.35),transparent)] [mask:linear-gradient(#fff,#fff)_content-box,linear-gradient(#fff,#fff)] [mask-composite:exclude] p-px",
+          "[background:linear-gradient(120deg,transparent,rgba(255,255,255,0.22),transparent)] [mask:linear-gradient(#fff,#fff)_content-box,linear-gradient(#fff,#fff)] [mask-composite:exclude] p-px",
         )}
       />
 
       <div className="relative">
-        <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 items-center justify-center rounded-xl border">
-          <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
+        <div className="flex items-start justify-between gap-4">
+          <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">
+            <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
+          </div>
+          <span
+            aria-hidden
+            className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors"
+          >
+            <ArrowUpRight
+              className={cn(
+                "size-4 transition-transform duration-300",
+                hovered && "-translate-y-0.5 translate-x-0.5",
+              )}
+            />
+          </span>
         </div>
         <h3 className="font-display text-fg-primary mt-6 text-xl font-semibold tracking-tight sm:text-2xl">
           {title}
@@ -93,29 +107,11 @@ export function ServiceCard({ service, className }: Props) {
         </p>
       </div>
 
-      <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3">
-        <ul className="flex flex-wrap gap-2">
-          {tech.map((t) => (
-            <li
-              key={t}
-              className="border-border-subtle text-fg-dim bg-bg-base/40 rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-wide"
-            >
-              {t}
-            </li>
-          ))}
-        </ul>
-        <span
-          aria-hidden
-          className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 items-center justify-center rounded-full transition-colors"
-        >
-          <ArrowUpRight
-            className={cn(
-              "size-4 transition-transform duration-300",
-              hovered && "-translate-y-0.5 translate-x-0.5",
-            )}
-          />
-        </span>
-      </div>
+      <ul className="relative mt-6 flex flex-wrap gap-2">
+        {tech.map((t) => (
+          <TechChip key={t} name={t} tone="base" />
+        ))}
+      </ul>
     </motion.div>
   );
 }

@@ -15,11 +15,10 @@ export const navSections: NavSection[] = [
 export const siteConfig = {
   name: "Leo Rossetti",
   tagline: "Full-stack dev. Ships products, not prototypes.",
-  email: "leo@dealfuel.ai",
+  email: "leo.francatto@gmail.com",
   socials: {
     github: "https://github.com/LeoRossetti",
-    linkedin: "https://www.linkedin.com/in/leonardo-rossetti-francatto/",
-    gmail: "mailto:leo@dealfuel.ai",
-    protonmail: "mailto:leo@dealfuel.ai",
+    linkedin: "https://www.linkedin.com/in/leorossetti",
+    gmail: "mailto:leo.francatto@gmail.com",
   },
 } as const;

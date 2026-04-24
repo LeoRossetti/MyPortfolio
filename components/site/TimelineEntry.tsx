@@ -4,7 +4,8 @@ import { ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { ExperienceEntry } from "@/lib/data/experience";
-import { easeOutQuart } from "@/lib/motion";
+import { fadeUp, staggerChildren } from "@/lib/motion";
+import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   entry: ExperienceEntry;
@@ -12,41 +13,41 @@ type Props = {
   className?: string;
 };
 
+/**
+ * Timeline entry block. The `<motion.article>` is a stagger
+ * orchestrator; major blocks (heading row, location, summary, each
+ * highlight, tech chips) cascade in at 0.1s intervals. Kept flat
+ * (no nested variant staggers) — nested `staggerChildren` can fail
+ * to cascade in certain motion v12 tree shapes.
+ */
 export function TimelineEntry({ entry, isCurrent, className }: Props) {
-  const { company, role, start, end, location, summary, highlights, tech, url } =
-    entry;
+  const {
+    company,
+    role,
+    start,
+    end,
+    location,
+    summary,
+    highlights,
+    tech,
+    url,
+  } = entry;
 
   return (
     <motion.article
-      initial={{ opacity: 0, x: 20 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial="hidden"
+      whileInView="show"
       viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.7, ease: easeOutQuart }}
-      className={cn("relative pl-10 sm:pl-14", className)}
+      variants={staggerChildren(0.1)}
+      className={cn("relative", className)}
     >
-      {/* Node on the timeline */}
-      <div
-        aria-hidden
-        className="absolute top-1 left-0 flex size-6 items-center justify-center sm:size-8"
+      {/* Heading row: role/company on the left, date range on the right. */}
+      <motion.div
+        variants={fadeUp}
+        className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2"
       >
-        <span
-          className={cn(
-            "bg-accent-primary absolute size-2.5 rounded-full",
-            isCurrent && "shadow-[0_0_14px_var(--accent-primary)]",
-          )}
-        />
-        {isCurrent && (
-          <span
-            aria-hidden
-            className="border-accent-primary/40 absolute size-6 animate-ping rounded-full border sm:size-7"
-          />
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h3 className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl">
-          {role}{" "}
-          <span className="text-fg-muted">@ </span>
+          {role} <span className="text-fg-muted">@ </span>
           {url ? (
             <a
               href={url}
@@ -61,34 +62,48 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
             company
           )}
         </h3>
+
         <div className="flex items-center gap-2 font-mono text-xs">
           <span className="text-fg-muted">{start}</span>
           <span className="text-fg-dim">→</span>
           <span
             className={cn(
-              "text-fg-muted",
+              "text-fg-muted inline-flex items-center gap-1.5",
               end === "Present" && "text-accent-primary",
             )}
           >
+            {isCurrent && (
+              <span
+                aria-hidden
+                className="bg-accent-primary size-1.5 animate-pulse rounded-full shadow-[0_0_8px_var(--accent-primary)]"
+              />
+            )}
             {end}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {location && (
-        <p className="text-fg-dim mt-1 font-mono text-[11px] tracking-wide uppercase">
+        <motion.p
+          variants={fadeUp}
+          className="text-fg-dim mt-1 font-mono text-xs tracking-wide uppercase"
+        >
           {location}
-        </p>
+        </motion.p>
       )}
 
-      <p className="text-fg-muted mt-4 max-w-2xl text-[15px] leading-relaxed">
+      <motion.p
+        variants={fadeUp}
+        className="text-fg-muted mt-4 max-w-2xl text-[15px] leading-relaxed"
+      >
         {summary}
-      </p>
+      </motion.p>
 
-      <ul className="mt-5 space-y-2">
+      <motion.ul variants={staggerChildren(0.08)} className="mt-5 space-y-2">
         {highlights.map((h, i) => (
-          <li
+          <motion.li
             key={i}
+            variants={fadeUp}
             className="text-fg-primary/90 relative pl-5 text-sm leading-relaxed"
           >
             <span
@@ -96,21 +111,16 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
               className="bg-accent-deep absolute top-[9px] left-0 size-1.5 rounded-full"
             />
             {h}
-          </li>
+          </motion.li>
         ))}
-      </ul>
+      </motion.ul>
 
       {tech.length > 0 && (
-        <ul className="mt-5 flex flex-wrap gap-2">
+        <motion.ul variants={fadeUp} className="mt-5 flex flex-wrap gap-2">
           {tech.map((t) => (
-            <li
-              key={t}
-              className="border-border-subtle text-fg-dim bg-bg-elevated/40 rounded-full border px-2.5 py-0.5 font-mono text-[10px] tracking-wide"
-            >
-              {t}
-            </li>
+            <TechChip key={t} name={t} tone="elevated" />
           ))}
-        </ul>
+        </motion.ul>
       )}
     </motion.article>
   );
