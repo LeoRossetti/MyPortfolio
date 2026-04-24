@@ -45,14 +45,14 @@ export function Footer() {
           </nav>
 
           {/* Social icons */}
-          <ul className="flex items-center gap-4">
+          <ul className="-m-2 flex items-center">
             <li>
               <a
                 href={siteConfig.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
-                className="text-fg-muted hover:text-fg-primary transition-colors"
+                className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <LinkedinIcon className="size-5" />
               </a>
@@ -63,7 +63,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub"
-                className="text-fg-muted hover:text-fg-primary transition-colors"
+                className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <GithubIcon className="size-5" />
               </a>
@@ -72,7 +72,7 @@ export function Footer() {
               <a
                 href={siteConfig.socials.gmail}
                 aria-label="Email"
-                className="text-fg-muted hover:text-fg-primary transition-colors"
+                className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <Mail className="size-5" />
               </a>

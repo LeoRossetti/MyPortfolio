@@ -92,7 +92,7 @@ export function Contact() {
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
         variants={staggerChildren(0.08)}
-        className="grid grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6"
+        className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6"
       >
         {channels.map(({ label, href, handle, icon: Icon, external }) => (
           <motion.a
@@ -101,7 +101,7 @@ export function Contact() {
             href={href}
             target={external ? "_blank" : undefined}
             rel={external ? "noopener noreferrer" : undefined}
-            className="group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full flex-col gap-6 overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8"
+            className="group bg-bg-elevated/60 hover:bg-bg-elevated/80 border-border-subtle hover:border-border-strong relative isolate flex h-full flex-col gap-6 overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.25)] sm:p-8"
           >
             <div className="flex items-start justify-between">
               <span className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">

@@ -62,7 +62,7 @@ export function ServiceCard({ service, className }: Props) {
       }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
       className={cn(
-        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full min-h-[240px] flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
+        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full flex-col justify-between overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:min-h-[240px] sm:p-8",
         className,
       )}
     >

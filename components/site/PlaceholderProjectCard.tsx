@@ -24,7 +24,7 @@ export function PlaceholderProjectCard({
     <div
       aria-label={`${project.title} — ${label}`}
       className={cn(
-        "bg-bg-elevated/40 border-border-subtle relative isolate flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 sm:p-8",
+        "bg-bg-elevated/40 border-border-subtle relative isolate flex h-full flex-col overflow-hidden rounded-2xl border p-6 sm:min-h-[300px] sm:p-8",
         className,
       )}
     >

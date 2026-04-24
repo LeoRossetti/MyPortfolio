@@ -23,10 +23,23 @@ const fragmentShader = /* glsl */ `
   uniform sampler2D uDataTexture;
   uniform sampler2D uTexture;
   uniform vec4 resolution;
+  uniform float imageAspect;
+  uniform float containerAspect;
   varying vec2 vUv;
 
   void main() {
-    vec2 uv = vUv;
+    // Cover-fit UV remap (like CSS object-fit: cover). Image keeps its
+    // aspect ratio and fills the container; the overflowing axis is
+    // cropped at the center. One of the two scale factors is always 1.
+    float scaleU = min(1.0, containerAspect / imageAspect);
+    float scaleV = min(1.0, imageAspect / containerAspect);
+    vec2 uv = vec2(
+      scaleU * (vUv.x - 0.5) + 0.5,
+      scaleV * (vUv.y - 0.5) + 0.5
+    );
+
+    // Distortion offset stays keyed to the plane UV, not the image UV,
+    // so the effect follows the cursor regardless of crop.
     vec4 offset = texture2D(uDataTexture, vUv);
     gl_FragColor = texture2D(uTexture, uv - 0.02 * offset.rg);
   }
@@ -76,6 +89,8 @@ export default function GridDistortion({
       resolution: { value: new THREE.Vector4() },
       uTexture: { value: null as THREE.Texture | null },
       uDataTexture: { value: null as THREE.DataTexture | null },
+      imageAspect: { value: 1.0 },
+      containerAspect: { value: 1.0 },
     };
 
     const size = grid;
@@ -127,6 +142,7 @@ export default function GridDistortion({
       camera.updateProjectionMatrix();
 
       uniforms.resolution.value.set(width, height, 1, 1);
+      uniforms.containerAspect.value = containerAspect;
     };
 
     const textureLoader = new THREE.TextureLoader();
@@ -137,6 +153,10 @@ export default function GridDistortion({
       texture.wrapS = THREE.ClampToEdgeWrapping;
       texture.wrapT = THREE.ClampToEdgeWrapping;
       uniforms.uTexture.value = texture;
+      const img = texture.image as { width: number; height: number };
+      if (img?.width && img?.height) {
+        uniforms.imageAspect.value = img.width / img.height;
+      }
       handleResize();
     });
 

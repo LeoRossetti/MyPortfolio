@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvider";
 import { TerminalBoot } from "@/components/animation/TerminalBoot";
 import { SiteBackdrop } from "@/components/layout/SiteBackdrop";
+import ClickSpark from "@/components/reactbits/ClickSpark";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
@@ -96,6 +97,7 @@ export default function RootLayout({
           </TooltipProvider>
         </SmoothScrollProvider>
         <TerminalBoot />
+        <ClickSpark />
         <Analytics />
         <SpeedInsights />
       </body>

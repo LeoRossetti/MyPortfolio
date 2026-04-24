@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "motion/react";
 import TextType from "@/components/reactbits/TextType";
 import { heroCopy } from "@/lib/data/hero";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Heavy (three + custom shader + image texture). Keep it out of the initial
 // bundle and off the SSR path — needs the browser's WebGL + DOM.
@@ -23,6 +24,11 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
+  // Mobile gets a static cover-fit image instead of the GridDistortion
+  // shader. Touch devices don't fire mousemove (so the effect is just a
+  // static stretched image anyway), and skipping the WebGL context
+  // saves them the allocation.
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   // Scroll-coupled transform: name + tagline gently shrink, drift up, and
   // fade as the user scrolls past the hero. "start start" → "end start"
@@ -50,22 +56,31 @@ export function Hero() {
           image distorts around the cursor and relaxes back on its own.
           Layering from back to front:
            1. Static grid + radial glow (fallback while three.js chunk loads)
-           2. GridDistortion canvas (animated, mouse-responsive)
+           2. GridDistortion canvas (animated, mouse-responsive) — or a
+              static cover-fit image on mobile where touch devices can't
+              drive the distortion
            3. Dark tint so body content above stays legible
            4. Edge fade into bg-base so the backdrop doesn't seam */}
       <div aria-hidden className="absolute inset-0 -z-10">
         <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
         <div className="bg-radial-glow pointer-events-none absolute inset-0" />
 
-        <div className="absolute inset-0 opacity-60">
-          <GridDistortion
-            imageSrc={HERO_IMAGE}
-            grid={14}
-            mouse={0.12}
-            strength={0.18}
-            relaxation={0.92}
+        {isMobile ? (
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-60"
+            style={{ backgroundImage: `url('${HERO_IMAGE}')` }}
           />
-        </div>
+        ) : (
+          <div className="absolute inset-0 opacity-60">
+            <GridDistortion
+              imageSrc={HERO_IMAGE}
+              grid={14}
+              mouse={0.12}
+              strength={0.18}
+              relaxation={0.92}
+            />
+          </div>
+        )}
 
         <div className="pointer-events-none absolute inset-0 bg-[color:var(--bg-base)]/50" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_100%_at_50%_50%,transparent_50%,var(--bg-base)_100%)]" />
@@ -94,7 +109,7 @@ export function Hero() {
           showCursor
           hideCursorOnDone
           cursorBlinkDuration={0.55}
-          className="text-fg-primary font-display text-[clamp(3rem,10vw,9rem)] leading-[0.9] font-bold whitespace-nowrap tracking-[-0.055em]"
+          className="text-fg-primary font-display text-[clamp(2.75rem,10vw,9rem)] leading-[0.9] font-bold whitespace-nowrap tracking-[-0.055em]"
           cursorClassName="text-fg-muted"
         />
 

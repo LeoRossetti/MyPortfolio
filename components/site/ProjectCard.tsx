@@ -24,7 +24,7 @@ export function ProjectCard({ project, className, mediaY }: Props) {
       target={primaryLink ? "_blank" : undefined}
       rel={primaryLink ? "noopener noreferrer" : undefined}
       className={cn(
-        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full min-h-[300px] flex-col overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:p-8",
+        "group bg-bg-elevated/60 border-border-subtle hover:border-border-strong relative isolate flex h-full flex-col overflow-hidden rounded-2xl border p-6 backdrop-blur-md transition-colors sm:min-h-[300px] sm:p-8",
         className,
       )}
     >
