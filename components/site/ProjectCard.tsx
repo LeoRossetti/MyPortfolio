@@ -3,6 +3,7 @@
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { motion, type MotionValue } from "motion/react";
 import { GithubIcon } from "@/components/icons/BrandIcons";
+import { GlareHover } from "@/components/reactbits/GlareHover";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data/projects";
 import { TechChip } from "@/components/site/TechChip";
@@ -89,6 +90,11 @@ export function ProjectCard({ project, className, mediaY }: Props) {
           )}
         </div>
       </div>
+
+      {/* Diagonal glare sweep on hover. Sits above card content as a
+          pointer-events-none overlay; the card's `overflow-hidden`
+          clips the gradient at the rounded corners. */}
+      <GlareHover />
     </a>
   );
 }
