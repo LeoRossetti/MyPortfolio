@@ -18,10 +18,10 @@ const Particles = dynamic(() => import("@/components/reactbits/Particles"), {
  * body copy stays legible everywhere without each section adding its own
  * legibility layer.
  *
- * Note: the Hero's GridDistortion canvas still layers on top of this in
- * the Hero area — that's intentional. Two backdrops in the Hero viewport
- * isn't a problem because the GridDistortion is opaque and fully masks
- * the particles while Hero is in view.
+ * Note: the Hero's backdrop layers on top of this in the Hero area.
+ * Because the Hero's decorative layers are all semi-transparent, the
+ * Hero mounts its own opaque base fill to mask these particles while
+ * Hero is in view — otherwise they'd bleed through.
  */
 export function SiteBackdrop() {
   const prefersReduced = usePrefersReducedMotion();

@@ -62,6 +62,10 @@ export function Hero() {
            3. Dark tint so body content above stays legible
            4. Edge fade into bg-base so the backdrop doesn't seam */}
       <div aria-hidden className="absolute inset-0 -z-10">
+        {/* Opaque base: masks the site-wide ambient particles in the Hero
+            area so they don't bleed through the semi-transparent
+            decorative layers below. */}
+        <div className="absolute inset-0 bg-[color:var(--bg-base)]" />
         <div className="bg-grid pointer-events-none absolute inset-0 opacity-40" />
         <div className="bg-radial-glow pointer-events-none absolute inset-0" />
 

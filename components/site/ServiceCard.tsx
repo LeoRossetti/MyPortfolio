@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/lib/data/services";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
@@ -16,7 +15,6 @@ type Props = {
 export function ServiceCard({ service, className }: Props) {
   const { icon: Icon, title, pitch, tech } = service;
   const cardRef = useRef<HTMLDivElement>(null);
-  const [hovered, setHovered] = useState(false);
   const prefersReduced = usePrefersReducedMotion();
 
   // mouse-tracked spotlight position (percent within card)
@@ -42,7 +40,6 @@ export function ServiceCard({ service, className }: Props) {
   };
 
   const onMouseLeave = () => {
-    setHovered(false);
     rotX.set(0);
     rotY.set(0);
   };
@@ -52,7 +49,6 @@ export function ServiceCard({ service, className }: Props) {
   return (
     <motion.div
       ref={cardRef}
-      onMouseEnter={() => setHovered(true)}
       onMouseLeave={onMouseLeave}
       onMouseMove={onMouseMove}
       style={{
@@ -83,21 +79,8 @@ export function ServiceCard({ service, className }: Props) {
       />
 
       <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">
-            <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
-          </div>
-          <span
-            aria-hidden
-            className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors"
-          >
-            <ArrowUpRight
-              className={cn(
-                "size-4 transition-transform duration-300",
-                hovered && "-translate-y-0.5 translate-x-0.5",
-              )}
-            />
-          </span>
+        <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">
+          <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
         </div>
         <h3 className="font-display text-fg-primary mt-6 text-xl font-semibold tracking-tight sm:text-2xl">
           {title}

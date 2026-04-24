@@ -1,13 +1,23 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
+import { toast } from "sonner";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { siteConfig } from "@/lib/data/nav";
 import { fadeUp, staggerChildren } from "@/lib/motion";
 
-const channels = [
+type Channel = {
+  label: string;
+  href: string;
+  handle: string;
+  icon: React.ComponentType<{ className?: string }>;
+  external: boolean;
+  copyable?: string;
+};
+
+const channels: Channel[] = [
   {
     label: "LinkedIn",
     href: siteConfig.socials.linkedin,
@@ -28,8 +38,9 @@ const channels = [
     handle: siteConfig.email,
     icon: Mail,
     external: false,
+    copyable: siteConfig.email,
   },
-] as const;
+];
 
 export function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -94,7 +105,7 @@ export function Contact() {
         variants={staggerChildren(0.08)}
         className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6"
       >
-        {channels.map(({ label, href, handle, icon: Icon, external }) => (
+        {channels.map(({ label, href, handle, icon: Icon, external, copyable }) => (
           <motion.a
             key={label}
             variants={fadeUp}
@@ -107,12 +118,16 @@ export function Contact() {
               <span className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">
                 <Icon className="text-accent-primary size-5" />
               </span>
-              <span
-                aria-hidden
-                className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors"
-              >
-                <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </span>
+              {copyable ? (
+                <CopyButton value={copyable} />
+              ) : (
+                <span
+                  aria-hidden
+                  className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors"
+                >
+                  <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+              )}
             </div>
             <div>
               <p className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase">
@@ -126,5 +141,43 @@ export function Contact() {
         ))}
       </motion.div>
     </section>
+  );
+}
+
+/**
+ * Small icon-only button that copies `value` to the clipboard. Sits inside
+ * the Email channel card (which is itself a `mailto:` link), so the click
+ * must stop both default navigation and event bubbling — otherwise the
+ * card's anchor would also fire and open the mail client.
+ */
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      toast.success("Email copied to clipboard");
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Couldn't copy — select and copy manually");
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={copied ? "Email copied" : "Copy email to clipboard"}
+      className="text-fg-dim hover:text-accent-primary focus-visible:text-accent-primary focus-visible:ring-accent-primary/40 relative z-10 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none"
+    >
+      {copied ? (
+        <Check className="size-4" />
+      ) : (
+        <Copy className="size-4" />
+      )}
+    </button>
   );
 }
