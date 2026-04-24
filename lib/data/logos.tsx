@@ -21,52 +21,52 @@ export type TechLogo = {
 
 export const techLogos: TechLogo[] = [
   {
-    node: <SiTypescript aria-hidden style={{ color: "#3178C6" }} />,
+    node: <SiTypescript aria-hidden />,
     title: "TypeScript",
     href: "https://www.typescriptlang.org",
   },
   {
-    node: <SiReact aria-hidden style={{ color: "#61DAFB" }} />,
+    node: <SiReact aria-hidden />,
     title: "React",
     href: "https://react.dev",
   },
   {
-    node: <SiNextdotjs aria-hidden style={{ color: "#ffffff" }} />,
+    node: <SiNextdotjs aria-hidden />,
     title: "Next.js",
     href: "https://nextjs.org",
   },
   {
-    node: <SiTailwindcss aria-hidden style={{ color: "#06B6D4" }} />,
+    node: <SiTailwindcss aria-hidden />,
     title: "Tailwind",
     href: "https://tailwindcss.com",
   },
   {
-    node: <SiExpo aria-hidden style={{ color: "#ffffff" }} />,
+    node: <SiExpo aria-hidden />,
     title: "Expo",
     href: "https://expo.dev",
   },
   {
-    node: <SiNodedotjs aria-hidden style={{ color: "#5FA04E" }} />,
+    node: <SiNodedotjs aria-hidden />,
     title: "Node.js",
     href: "https://nodejs.org",
   },
   {
-    node: <ConvexIcon style={{ color: "#EE342F" }} />,
+    node: <ConvexIcon />,
     title: "Convex",
     href: "https://convex.dev",
   },
   {
-    node: <SiClerk aria-hidden style={{ color: "#6C47FF" }} />,
+    node: <SiClerk aria-hidden />,
     title: "Clerk",
     href: "https://clerk.com",
   },
   {
-    node: <SiPython aria-hidden style={{ color: "#3776AB" }} />,
+    node: <SiPython aria-hidden />,
     title: "Python",
     href: "https://www.python.org",
   },
   {
-    node: <SiSharp aria-hidden style={{ color: "#512BD4" }} />,
+    node: <SiSharp aria-hidden />,
     title: "C#",
     href: "https://learn.microsoft.com/dotnet/csharp",
   },

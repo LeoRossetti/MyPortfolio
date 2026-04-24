@@ -54,7 +54,7 @@ export function PlaceholderProjectCard({ project, className }: Props) {
             {[0, 1, 2].map((i) => (
               <li
                 key={i}
-                className="bg-bg-surface/60 h-[28px] w-[88px] animate-pulse rounded-full"
+                className="bg-bg-surface/60 h-[26px] w-[84px] animate-pulse rounded-full"
                 style={{ animationDelay: `${i * 150}ms` }}
               />
             ))}

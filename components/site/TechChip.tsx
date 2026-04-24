@@ -27,7 +27,7 @@ export function TechChip({ name, tone = "base", className }: Props) {
       )}
     >
       {icon && (
-        <span className="inline-flex shrink-0 text-[13px] leading-none">
+        <span className="inline-flex shrink-0 text-sm leading-none">
           {icon}
         </span>
       )}

@@ -83,8 +83,21 @@ export function ServiceCard({ service, className }: Props) {
       />
 
       <div className="relative">
-        <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 items-center justify-center rounded-xl border">
-          <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
+        <div className="flex items-start justify-between gap-4">
+          <div className="border-border-subtle bg-bg-base/70 inline-flex size-11 shrink-0 items-center justify-center rounded-xl border">
+            <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
+          </div>
+          <span
+            aria-hidden
+            className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors"
+          >
+            <ArrowUpRight
+              className={cn(
+                "size-4 transition-transform duration-300",
+                hovered && "-translate-y-0.5 translate-x-0.5",
+              )}
+            />
+          </span>
         </div>
         <h3 className="font-display text-fg-primary mt-6 text-xl font-semibold tracking-tight sm:text-2xl">
           {title}
@@ -94,24 +107,11 @@ export function ServiceCard({ service, className }: Props) {
         </p>
       </div>
 
-      <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3">
-        <ul className="flex flex-wrap gap-2">
-          {tech.map((t) => (
-            <TechChip key={t} name={t} tone="base" />
-          ))}
-        </ul>
-        <span
-          aria-hidden
-          className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 items-center justify-center rounded-full transition-colors"
-        >
-          <ArrowUpRight
-            className={cn(
-              "size-4 transition-transform duration-300",
-              hovered && "-translate-y-0.5 translate-x-0.5",
-            )}
-          />
-        </span>
-      </div>
+      <ul className="relative mt-6 flex flex-wrap gap-2">
+        {tech.map((t) => (
+          <TechChip key={t} name={t} tone="base" />
+        ))}
+      </ul>
     </motion.div>
   );
 }

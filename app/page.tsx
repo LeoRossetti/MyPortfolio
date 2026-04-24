@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SectionDivider } from "@/components/layout/SectionDivider";
 import { Hero } from "@/components/sections/Hero";
 import { StackStrip } from "@/components/sections/StackStrip";
 import { About } from "@/components/sections/About";
@@ -17,9 +18,13 @@ export default function Home() {
         <Hero />
         <StackStrip />
         <About />
+        <SectionDivider />
         <Services />
+        <SectionDivider />
         <Projects />
+        <SectionDivider />
         <Experience />
+        <SectionDivider />
         <Contact />
       </main>
 
