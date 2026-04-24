@@ -3,12 +3,25 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
-import { navSections } from "@/lib/data/nav";
+import { navSections, siteConfig } from "@/lib/data/nav";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
+import StaggeredMenu, {
+  type StaggeredMenuItem,
+} from "@/components/reactbits/StaggeredMenu";
 
+/**
+ * Top-level navigation. Swaps between a standard text navbar on md+
+ * and a fullscreen StaggeredMenu experience on mobile. Conditional
+ * mount (vs CSS hide/show) keeps GSAP off the desktop bundle path.
+ */
 export function Navbar() {
+  const isMobile = useMediaQuery("(max-width: 767px)");
+  return isMobile ? <MobileStaggeredNav /> : <DesktopNavbar />;
+}
+
+function DesktopNavbar() {
   const [activeId, setActiveId] = useState<string>(navSections[0]?.id ?? "");
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   // Glass-on-scroll: transparent while the hero is in view, glassy past it.
   useEffect(() => {
@@ -44,7 +57,6 @@ export function Navbar() {
 
   const handleNavClick = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
-    setMobileOpen(false);
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -62,7 +74,6 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4 lg:px-10">
-        {/* Left: mono label. No more logo mark, no more name — hero owns that. */}
         <a
           href="#home"
           onClick={handleNavClick("home")}
@@ -71,8 +82,7 @@ export function Navbar() {
           <span className="text-fg-dim">{"// "}</span>portfolio
         </a>
 
-        {/* Desktop nav — lowercase mono links, no pill container, just text. */}
-        <ul className="hidden items-center gap-7 font-mono md:flex">
+        <ul className="flex items-center gap-7 font-mono">
           {navSections.slice(1).map((section) => (
             <li key={section.id}>
               <a
@@ -90,58 +100,48 @@ export function Navbar() {
             </li>
           ))}
         </ul>
-
-        {/* Mobile trigger */}
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((v) => !v)}
-          className="border-border-subtle flex size-9 items-center justify-center rounded-md border md:hidden"
-        >
-          <div className="flex flex-col gap-1">
-            <span
-              className={cn(
-                "bg-fg-primary h-px w-4 transition",
-                mobileOpen && "translate-y-[3px] rotate-45",
-              )}
-            />
-            <span
-              className={cn(
-                "bg-fg-primary h-px w-4 transition",
-                mobileOpen && "-translate-y-[2px] -rotate-45",
-              )}
-            />
-          </div>
-        </button>
       </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <motion.ul
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          className="border-border-subtle bg-bg-base/90 flex flex-col gap-1 border-b px-6 pb-6 font-mono backdrop-blur-xl md:hidden"
-        >
-          {navSections.slice(1).map((section) => (
-            <li key={section.id}>
-              <a
-                href={`#${section.id}`}
-                onClick={handleNavClick(section.id)}
-                className={cn(
-                  "block rounded-md px-2 py-2 text-base",
-                  activeId === section.id
-                    ? "text-fg-primary"
-                    : "text-fg-muted",
-                )}
-              >
-                {section.label.toLowerCase()}
-              </a>
-            </li>
-          ))}
-        </motion.ul>
-      )}
     </motion.header>
+  );
+}
+
+function MobileStaggeredNav() {
+  const items: StaggeredMenuItem[] = navSections.map((s) => ({
+    label: s.label,
+    link: `#${s.id}`,
+    ariaLabel: `Go to ${s.label}`,
+  }));
+
+  const socialItems = [
+    { label: "LinkedIn", link: siteConfig.socials.linkedin },
+    { label: "GitHub", link: siteConfig.socials.github },
+    { label: "Email", link: siteConfig.socials.gmail },
+  ];
+
+  const handleItemClick = (item: StaggeredMenuItem) => {
+    const id = item.link.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <StaggeredMenu
+      isFixed
+      position="right"
+      items={items}
+      socialItems={socialItems}
+      displaySocials
+      displayItemNumbering={false}
+      menuButtonColor="#ffffff"
+      openMenuButtonColor="#ffffff"
+      colors={["#2a2a2a", "#1c1c1c"]}
+      logoNode={
+        <span className="font-mono text-sm">
+          <span className="text-fg-dim">{"// "}</span>
+          <span className="text-fg-muted">portfolio</span>
+        </span>
+      }
+      onItemClick={handleItemClick}
+    />
   );
 }
