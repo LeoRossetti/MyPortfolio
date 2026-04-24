@@ -1,13 +1,22 @@
+"use client";
+
 import { Lock } from "lucide-react";
+import { motion, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data/projects";
 
 type Props = {
   project: Project;
   className?: string;
+  /** Optional scroll-linked y value applied to the media placeholder. */
+  mediaY?: MotionValue<number>;
 };
 
-export function PlaceholderProjectCard({ project, className }: Props) {
+export function PlaceholderProjectCard({
+  project,
+  className,
+  mediaY,
+}: Props) {
   const label =
     project.status === "in-progress" ? "In progress" : "Coming soon";
 
@@ -19,16 +28,23 @@ export function PlaceholderProjectCard({ project, className }: Props) {
         className,
       )}
     >
-      {/* Media placeholder — animated shimmer */}
+      {/* Media placeholder — animated shimmer. Inner motion layer is
+          over-provisioned so the ±20px parallax drift doesn't reveal a
+          gap. */}
       <div className="border-border-subtle bg-bg-base/40 relative mb-6 aspect-[16/9] w-full overflow-hidden rounded-lg border">
-        <div className="bg-grid absolute inset-0 opacity-30" />
-        <div
-          aria-hidden
-          className="absolute inset-y-0 -left-1/3 w-1/3 animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent"
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Lock className="text-fg-dim size-7" strokeWidth={1.5} />
-        </div>
+        <motion.div
+          style={mediaY ? { y: mediaY } : undefined}
+          className="absolute -top-8 -bottom-8 left-0 right-0"
+        >
+          <div className="bg-grid absolute inset-0 opacity-30" />
+          <div
+            aria-hidden
+            className="absolute inset-y-0 -left-1/3 w-1/3 animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.08)] to-transparent"
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Lock className="text-fg-dim size-7" strokeWidth={1.5} />
+          </div>
+        </motion.div>
       </div>
 
       <div className="flex flex-1 flex-col">

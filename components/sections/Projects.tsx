@@ -1,10 +1,11 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { ProjectCard } from "@/components/site/ProjectCard";
 import { PlaceholderProjectCard } from "@/components/site/PlaceholderProjectCard";
-import { projects, projectsCopy } from "@/lib/data/projects";
-import { fadeUp, staggerChildren } from "@/lib/motion";
+import { projects, projectsCopy, type Project } from "@/lib/data/projects";
+import { fadeUp, popIn, staggerChildren } from "@/lib/motion";
 
 export function Projects() {
   return (
@@ -50,19 +51,37 @@ export function Projects() {
         className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6"
       >
         {projects.map((project) => (
-          <motion.div
-            key={project.id}
-            variants={fadeUp}
-            className={project.colSpan}
-          >
-            {project.status === "live" ? (
-              <ProjectCard project={project} />
-            ) : (
-              <PlaceholderProjectCard project={project} />
-            )}
-          </motion.div>
+          <ProjectCardItem key={project.id} project={project} />
         ))}
       </motion.div>
     </section>
+  );
+}
+
+/**
+ * Per-card wrapper. The ref sits on the OUTER plain div so its
+ * bounding rect is stable — `useScroll` measures via
+ * `getBoundingClientRect`, which returns the transformed rect. If the
+ * ref was on the animated motion.div (popIn does scale 0.95→1), the
+ * measurement would drift and scroll progress could mis-fire.
+ */
+function ProjectCardItem({ project }: { project: Project }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const mediaY = useTransform(scrollYProgress, [0, 1], [20, -20]);
+
+  return (
+    <div ref={ref} className={project.colSpan}>
+      <motion.div variants={popIn} className="h-full">
+        {project.status === "live" ? (
+          <ProjectCard project={project} mediaY={mediaY} />
+        ) : (
+          <PlaceholderProjectCard project={project} mediaY={mediaY} />
+        )}
+      </motion.div>
+    </div>
   );
 }

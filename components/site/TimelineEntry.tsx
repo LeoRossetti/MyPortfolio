@@ -14,11 +14,11 @@ type Props = {
 };
 
 /**
- * Timeline entry block. The `<motion.article>` itself doesn't animate —
- * it's a stagger orchestrator. Major blocks (heading row, location,
- * summary, each highlight, tech chips) cascade in at 0.1s intervals.
- * The role/company heading has its own nested word-level stagger
- * (0.04s between tokens) so each word fades up individually.
+ * Timeline entry block. The `<motion.article>` is a stagger
+ * orchestrator; major blocks (heading row, location, summary, each
+ * highlight, tech chips) cascade in at 0.1s intervals. Kept flat
+ * (no nested variant staggers) — nested `staggerChildren` can fail
+ * to cascade in certain motion v12 tree shapes.
  */
 export function TimelineEntry({ entry, isCurrent, className }: Props) {
   const {
@@ -41,51 +41,29 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
       variants={staggerChildren(0.1)}
       className={cn("relative", className)}
     >
-      {/* Heading row: role/company on the left, date range on the right.
-          Plain-div wrapper is invisible to motion's stagger traversal,
-          so the h3 and the date div both register as direct children of
-          the article's stagger context. */}
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-        <motion.h3
-          variants={staggerChildren(0.04)}
-          className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl"
-        >
-          {role.split(" ").map((word, i) => (
-            <motion.span
-              key={`${word}-${i}`}
-              variants={fadeUp}
-              className="inline-block"
+      {/* Heading row: role/company on the left, date range on the right. */}
+      <motion.div
+        variants={fadeUp}
+        className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2"
+      >
+        <h3 className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl">
+          {role} <span className="text-fg-muted">@ </span>
+          {url ? (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-accent-primary inline-flex items-center gap-1.5 transition-colors"
             >
-              {word + " "}
-            </motion.span>
-          ))}
-          <motion.span
-            variants={fadeUp}
-            className="text-fg-muted inline-block"
-          >
-            @{" "}
-          </motion.span>
-          <motion.span variants={fadeUp} className="inline-block">
-            {url ? (
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-accent-primary inline-flex items-center gap-1.5 transition-colors"
-              >
-                {company}
-                <ExternalLink className="size-4 opacity-60" />
-              </a>
-            ) : (
-              company
-            )}
-          </motion.span>
-        </motion.h3>
+              {company}
+              <ExternalLink className="size-4 opacity-60" />
+            </a>
+          ) : (
+            company
+          )}
+        </h3>
 
-        <motion.div
-          variants={fadeUp}
-          className="flex items-center gap-2 font-mono text-xs"
-        >
+        <div className="flex items-center gap-2 font-mono text-xs">
           <span className="text-fg-muted">{start}</span>
           <span className="text-fg-dim">→</span>
           <span
@@ -102,8 +80,8 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
             )}
             {end}
           </span>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
 
       {location && (
         <motion.p

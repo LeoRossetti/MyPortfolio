@@ -58,14 +58,14 @@ export function Services() {
 }
 
 /**
- * Per-card wrapper: carries the entrance `fadeUp` variant plus two
- * scroll-linked motion values:
- *   - `scale` pops from 0.96 → 1 as the card enters and gently settles
- *     back to 0.98 on the way out, giving each card a subtle breath.
+ * Per-card wrapper. Ref sits on the OUTER plain div so `getBoundingClientRect`
+ * (which is what `useScroll` reads) stays stable — transformed targets
+ * can cause scroll progress to drift or freeze.
+ *
+ *   - `scale` pops from 0.96 → 1 as the card enters and settles back to
+ *     0.98 on the way out, giving each card a subtle breath.
  *   - `x` applies a soft horizontal parallax to the wide (`col-span-8`)
  *     cards only — ~16px drift across the full scroll journey.
- * Hooks can't live inside `services.map(...)`, so the per-item logic
- * lives in its own component.
  */
 function ServiceCardItem({ service }: { service: Service }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -84,13 +84,14 @@ function ServiceCardItem({ service }: { service: Service }) {
   const x = useTransform(scrollYProgress, [0, 1], isWide ? [-8, 8] : [0, 0]);
 
   return (
-    <motion.div
-      ref={ref}
-      variants={fadeUp}
-      style={{ scale, x }}
-      className={service.colSpan}
-    >
-      <ServiceCard service={service} />
-    </motion.div>
+    <div ref={ref} className={service.colSpan}>
+      <motion.div
+        variants={fadeUp}
+        style={{ scale, x }}
+        className="h-full"
+      >
+        <ServiceCard service={service} />
+      </motion.div>
+    </div>
   );
 }

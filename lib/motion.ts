@@ -28,6 +28,16 @@ export const fadeIn: Variants = {
   show: { opacity: 1, transition: { duration: 0.8, ease: easeOutQuart } },
 };
 
+export const popIn: Variants = {
+  hidden: { opacity: 0, y: 24, scale: 0.95 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.6, ease: easeOutQuart },
+  },
+};
+
 export const staggerChildren = (delay = 0.08): Variants => ({
   hidden: {},
   show: { transition: { staggerChildren: delay } },
