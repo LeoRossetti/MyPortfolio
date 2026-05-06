@@ -3,26 +3,26 @@
 import { Lock } from "lucide-react";
 import { motion, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
-import type { Project } from "@/lib/data/projects";
 
 type Props = {
-  project: Project;
+  /** Localised copy for this project (title + description). */
+  copy: { title: string; description: string };
+  /** Localised status label (e.g. "In progress", "Coming soon"). */
+  statusLabel: string;
   className?: string;
   /** Optional scroll-linked y value applied to the media placeholder. */
   mediaY?: MotionValue<number>;
 };
 
 export function PlaceholderProjectCard({
-  project,
+  copy,
+  statusLabel,
   className,
   mediaY,
 }: Props) {
-  const label =
-    project.status === "in-progress" ? "In progress" : "Coming soon";
-
   return (
     <div
-      aria-label={`${project.title} — ${label}`}
+      aria-label={`${copy.title} — ${statusLabel}`}
       className={cn(
         "bg-bg-elevated/40 border-border-subtle relative isolate flex h-full flex-col overflow-hidden rounded-2xl border p-6 sm:min-h-[300px] sm:p-8",
         className,
@@ -54,14 +54,14 @@ export function PlaceholderProjectCard({
             className="size-1.5 animate-pulse rounded-full bg-[var(--accent-warn)] shadow-[0_0_8px_var(--accent-warn)]"
           />
           <span className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase">
-            {label}
+            {statusLabel}
           </span>
         </div>
         <h3 className="font-display text-fg-primary/80 mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-          {project.title}
+          {copy.title}
         </h3>
         <p className="text-fg-muted mt-3 text-sm leading-relaxed sm:text-[15px]">
-          {project.description}
+          {copy.description}
         </p>
 
         <div className="mt-auto pt-5">

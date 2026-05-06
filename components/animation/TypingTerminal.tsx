@@ -4,9 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import type { TerminalLine } from "@/lib/data/hero";
+import type { Dictionary } from "@/lib/i18n/types";
+
+type TerminalDict = Dictionary["hero"]["terminal"];
+type TerminalChrome = Dictionary["terminal"];
 
 type Props = {
   lines: TerminalLine[];
+  /** Slice of the dictionary used to look up the visible text for each line. */
+  terminalDict: TerminalDict;
+  /** Localised chrome (window title + aria-label). */
+  chrome: TerminalChrome;
   /** ms per character */
   speed?: number;
   /** ms pause after a command line finishes typing before the next line starts */
@@ -14,7 +22,6 @@ type Props = {
   /** start typing only after this many ms */
   startDelay?: number;
   className?: string;
-  title?: string;
 };
 
 type RenderedLine = {
@@ -24,15 +31,19 @@ type RenderedLine = {
   done: boolean;
 };
 
-function getText(line: TerminalLine): string {
+function getText(line: TerminalLine, terminalDict: TerminalDict): string {
   if (line.kind === "blank") return "";
-  return line.text;
+  const value = terminalDict[line.key as keyof TerminalDict];
+  return typeof value === "string" ? value : "";
 }
 
-function fullReveal(lines: TerminalLine[]): RenderedLine[] {
+function fullReveal(
+  lines: TerminalLine[],
+  terminalDict: TerminalDict,
+): RenderedLine[] {
   return lines.map((source) => ({
     source,
-    reveal: getText(source).length,
+    reveal: getText(source, terminalDict).length,
     done: true,
   }));
 }
@@ -56,15 +67,16 @@ export function TypingTerminal(props: Props) {
 
 function TypingTerminalInner({
   lines,
+  terminalDict,
+  chrome,
   speed = 22,
   linePause = 280,
   startDelay = 400,
   className,
-  title = "leo@portfolio  ~  zsh",
   prefersReduced,
 }: Props & { prefersReduced: boolean }) {
   const [rendered, setRendered] = useState<RenderedLine[]>(() =>
-    prefersReduced ? fullReveal(lines) : emptyReveal(lines),
+    prefersReduced ? fullReveal(lines, terminalDict) : emptyReveal(lines),
   );
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -75,7 +87,7 @@ function TypingTerminalInner({
     let elapsed = startDelay;
 
     lines.forEach((line, lineIdx) => {
-      const text = getText(line);
+      const text = getText(line, terminalDict);
 
       if (line.kind === "blank") {
         const t = setTimeout(() => {
@@ -114,7 +126,7 @@ function TypingTerminalInner({
       timersRef.current = [];
     };
     // lines is stable per remount; speed/pause/startDelay only change on prop edit
-  }, [lines, speed, linePause, startDelay, prefersReduced]);
+  }, [lines, terminalDict, speed, linePause, startDelay, prefersReduced]);
 
   const allDone = rendered.every((l) => l.done);
 
@@ -125,20 +137,20 @@ function TypingTerminalInner({
         className,
       )}
       role="presentation"
-      aria-label="Terminal showcase"
+      aria-label={chrome.ariaLabel}
     >
       <div className="border-border-subtle bg-bg-base/50 flex items-center gap-2 border-b px-4 py-2.5">
         <span className="size-3 rounded-full bg-[#FF5F56]" />
         <span className="size-3 rounded-full bg-[#FFBD2E]" />
         <span className="size-3 rounded-full bg-[#27C93F]" />
         <span className="text-fg-dim ml-3 truncate font-mono text-[11px] tracking-wide">
-          {title}
+          {chrome.title}
         </span>
       </div>
 
       <div className="px-4 py-4 font-mono text-[12.5px] leading-relaxed sm:px-6 sm:py-5 sm:text-sm">
         {rendered.map((line, idx) => {
-          const text = getText(line.source);
+          const text = getText(line.source, terminalDict);
           const visible = text.slice(0, line.reveal);
           const isLastVisible = !allDone && line.reveal > 0 && !line.done;
           const isFinalLine =

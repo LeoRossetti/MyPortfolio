@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import type { Dictionary } from "@/lib/i18n/types";
 
 /**
  * Bio-only About section. Matches the container width of every other
@@ -13,7 +14,7 @@ import { fadeUp, staggerChildren } from "@/lib/motion";
  * the grid-based sections that follow. Each block staggers in on its
  * own beat; the eyebrow drifts at half speed as the section scrolls.
  */
-export function About() {
+export function About({ dict }: { dict: Dictionary }) {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -39,31 +40,30 @@ export function About() {
           style={{ y: eyebrowY }}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {`// about`}
+          {dict.about.eyebrow}
         </motion.p>
 
         <motion.h2
           variants={fadeUp}
           className="text-fg-primary font-display mt-5 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          Hi, I&apos;m Leo.
+          {dict.about.heading}
         </motion.h2>
 
         <motion.p
           variants={fadeUp}
           className="text-fg-muted mt-8 text-base leading-relaxed sm:text-lg"
         >
-          A full-stack developer from{" "}
-          <span className="text-fg-primary">Brazil</span>, three years into
-          the craft. I like shipping whole products end-to-end — the data
-          model, the backend, the UI, the polish — not just prototypes.
+          {dict.about.paragraphLeadFrom}{" "}
+          <span className="text-fg-primary">{dict.about.paragraphCountry}</span>
+          {dict.about.paragraphTail}
         </motion.p>
 
         <motion.p
           variants={fadeUp}
           className="text-fg-dim mt-5 font-mono text-sm tracking-wide"
         >
-          Remote · always shipping
+          {dict.about.status}
         </motion.p>
       </motion.div>
     </section>

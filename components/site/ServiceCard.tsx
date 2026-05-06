@@ -9,11 +9,14 @@ import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   service: Service;
+  /** Localised copy for this service (title + pitch). */
+  copy: { title: string; pitch: string };
   className?: string;
 };
 
-export function ServiceCard({ service, className }: Props) {
-  const { icon: Icon, title, pitch, tech } = service;
+export function ServiceCard({ service, copy, className }: Props) {
+  const { icon: Icon, tech } = service;
+  const { title, pitch } = copy;
   const cardRef = useRef<HTMLDivElement>(null);
   const prefersReduced = usePrefersReducedMotion();
 

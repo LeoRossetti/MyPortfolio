@@ -10,13 +10,24 @@ import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   project: Project;
+  /** Localised copy for this project (title + description). */
+  copy: { title: string; description: string };
+  /** Localised labels for project link kinds. */
+  linkLabels: { github: string; demo: string; external: string };
   className?: string;
   /** Optional scroll-linked y value applied to the media placeholder. */
   mediaY?: MotionValue<number>;
 };
 
-export function ProjectCard({ project, className, mediaY }: Props) {
-  const { title, description, tech, links } = project;
+export function ProjectCard({
+  project,
+  copy,
+  linkLabels,
+  className,
+  mediaY,
+}: Props) {
+  const { tech, links } = project;
+  const { title, description } = copy;
   const primaryLink = links?.[0];
 
   return (
@@ -83,7 +94,7 @@ export function ProjectCard({ project, className, mediaY }: Props) {
                   ) : (
                     <ExternalLink className="size-3.5" />
                   )}
-                  {link.label}
+                  {linkLabels[link.labelKey]}
                 </span>
               ))}
             </div>

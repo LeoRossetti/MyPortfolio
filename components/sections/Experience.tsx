@@ -2,10 +2,11 @@
 
 import { motion } from "motion/react";
 import { TimelineEntry } from "@/components/site/TimelineEntry";
-import { experience, experienceCopy } from "@/lib/data/experience";
+import { experience } from "@/lib/data/experience";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import type { Dictionary } from "@/lib/i18n/types";
 
-export function Experience() {
+export function Experience({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="experience"
@@ -22,13 +23,13 @@ export function Experience() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {experienceCopy.eyebrow}
+          {dict.experience.eyebrow}
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">{experienceCopy.heading} </span>
+          <span className="text-fg-primary">{dict.experience.headingLead} </span>
           <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
             DealFuel
           </span>
@@ -40,6 +41,8 @@ export function Experience() {
           <TimelineEntry
             key={entry.id}
             entry={entry}
+            entryCopy={dict.experience.items[entry.id as keyof typeof dict.experience.items]}
+            presentLabel={dict.experience.presentLabel}
             isCurrent={entry.end === "Present" && i === 0}
           />
         ))}

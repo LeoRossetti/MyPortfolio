@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { siteConfig } from "@/lib/data/nav";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import type { Dictionary } from "@/lib/i18n/types";
 
 type Channel = {
   label: string;
@@ -17,32 +18,9 @@ type Channel = {
   copyable?: string;
 };
 
-const channels: Channel[] = [
-  {
-    label: "LinkedIn",
-    href: siteConfig.socials.linkedin,
-    handle: "/in/leorossetti",
-    icon: LinkedinIcon,
-    external: true,
-  },
-  {
-    label: "GitHub",
-    href: siteConfig.socials.github,
-    handle: "@LeoRossetti",
-    icon: GithubIcon,
-    external: true,
-  },
-  {
-    label: "Email",
-    href: siteConfig.socials.gmail,
-    handle: siteConfig.email,
-    icon: Mail,
-    external: false,
-    copyable: siteConfig.email,
-  },
-];
+type CopyDict = Dictionary["contact"]["copy"];
 
-export function Contact() {
+export function Contact({ dict }: { dict: Dictionary }) {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -55,6 +33,31 @@ export function Contact() {
     [0, 0.6, 1],
     [1, 1, 0.5],
   );
+
+  const channels: Channel[] = [
+    {
+      label: dict.contact.channels.linkedin,
+      href: siteConfig.socials.linkedin,
+      handle: "/in/leorossetti",
+      icon: LinkedinIcon,
+      external: true,
+    },
+    {
+      label: dict.contact.channels.github,
+      href: siteConfig.socials.github,
+      handle: "@LeoRossetti",
+      icon: GithubIcon,
+      external: true,
+    },
+    {
+      label: dict.contact.channels.email,
+      href: siteConfig.socials.gmail,
+      handle: siteConfig.email,
+      icon: Mail,
+      external: false,
+      copyable: siteConfig.email,
+    },
+  ];
 
   return (
     <section
@@ -76,23 +79,22 @@ export function Contact() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {`// contact`}
+          {dict.contact.eyebrow}
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">Say </span>
+          <span className="text-fg-primary">{dict.contact.headingLead} </span>
           <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
-            hi.
+            {dict.contact.headingAccent}
           </span>
         </motion.h2>
         <motion.p
           variants={fadeUp}
           className="text-fg-muted max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          Questions, collaborations, or just want to chat about a stack? Any
-          of these lands straight with me — I usually reply within a day.
+          {dict.contact.paragraph}
         </motion.p>
       </motion.div>
 
@@ -119,7 +121,7 @@ export function Contact() {
                 <Icon className="text-accent-primary size-5" />
               </span>
               {copyable ? (
-                <CopyButton value={copyable} />
+                <CopyButton value={copyable} copy={dict.contact.copy} />
               ) : (
                 <span
                   aria-hidden
@@ -150,7 +152,7 @@ export function Contact() {
  * must stop both default navigation and event bubbling — otherwise the
  * card's anchor would also fire and open the mail client.
  */
-function CopyButton({ value }: { value: string }) {
+function CopyButton({ value, copy }: { value: string; copy: CopyDict }) {
   const [copied, setCopied] = useState(false);
 
   const onClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -159,10 +161,10 @@ function CopyButton({ value }: { value: string }) {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
-      toast.success("Email copied to clipboard");
+      toast.success(copy.toastSuccess);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Couldn't copy — select and copy manually");
+      toast.error(copy.toastError);
     }
   };
 
@@ -170,7 +172,7 @@ function CopyButton({ value }: { value: string }) {
     <button
       type="button"
       onClick={onClick}
-      aria-label={copied ? "Email copied" : "Copy email to clipboard"}
+      aria-label={copied ? copy.copied : copy.action}
       className="text-fg-dim hover:text-accent-primary focus-visible:text-accent-primary focus-visible:ring-accent-primary/40 relative z-10 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:ring-2 focus-visible:outline-none"
     >
       {copied ? (

@@ -4,7 +4,7 @@ import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "motion/react";
 import TextType from "@/components/reactbits/TextType";
-import { heroCopy } from "@/lib/data/hero";
+import type { Dictionary } from "@/lib/i18n/types";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Heavy (three + custom shader + image texture). Keep it out of the initial
@@ -22,7 +22,7 @@ const HERO_IMAGE =
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export function Hero() {
+export function Hero({ dict }: { dict: Dictionary }) {
   const heroRef = useRef<HTMLElement>(null);
   // Mobile gets a static cover-fit image instead of the GridDistortion
   // shader. Touch devices don't fire mousemove (so the effect is just a
@@ -106,7 +106,7 @@ export function Hero() {
             instead of behind it. */}
         <TextType
           as="h1"
-          text="Leo Rossetti"
+          text={dict.hero.name}
           typingSpeed={75}
           initialDelay={1800}
           loop={false}
@@ -123,8 +123,8 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.24, ease }}
           className="text-fg-muted mt-8 max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          <span className="text-fg-primary">Full-stack developer.</span>{" "}
-          {heroCopy.tagline}
+          <span className="text-fg-primary">{dict.hero.taglineLead}</span>{" "}
+          {dict.hero.tagline}
         </motion.p>
       </motion.div>
 
@@ -135,7 +135,7 @@ export function Hero() {
         transition={{ duration: 0.8, delay: 0.6, ease }}
         className="text-fg-dim pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[11px] tracking-[0.3em] uppercase"
       >
-        scroll ↓
+        {dict.hero.scrollHint}
       </motion.div>
     </section>
   );

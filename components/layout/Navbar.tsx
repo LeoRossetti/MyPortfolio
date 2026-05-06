@@ -8,20 +8,33 @@ import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import StaggeredMenu, {
   type StaggeredMenuItem,
 } from "@/components/reactbits/StaggeredMenu";
+import type { Dictionary } from "@/lib/i18n/types";
+
+/**
+ * Resolve a section id to its dictionary nav label. The Services section
+ * carries id `services` but is shown under the `Work` label, so we map
+ * that one specifically; everything else falls back to a same-named
+ * key on `dict.nav` and finally the id itself if neither lookup hits.
+ */
+function makeLabelFor(dict: Dictionary) {
+  return (id: string) =>
+    (dict.nav as Record<string, string>)[id === "services" ? "work" : id] ?? id;
+}
 
 /**
  * Top-level navigation. Swaps between a standard text navbar on md+
  * and a fullscreen StaggeredMenu experience on mobile. Conditional
  * mount (vs CSS hide/show) keeps GSAP off the desktop bundle path.
  */
-export function Navbar() {
+export function Navbar({ dict }: { dict: Dictionary }) {
   const isMobile = useMediaQuery("(max-width: 767px)");
-  return isMobile ? <MobileStaggeredNav /> : <DesktopNavbar />;
+  return isMobile ? <MobileStaggeredNav dict={dict} /> : <DesktopNavbar dict={dict} />;
 }
 
-function DesktopNavbar() {
+function DesktopNavbar({ dict }: { dict: Dictionary }) {
   const [activeId, setActiveId] = useState<string>(navSections[0]?.id ?? "");
   const [scrolled, setScrolled] = useState(false);
+  const labelFor = makeLabelFor(dict);
 
   // Glass-on-scroll: transparent while the hero is in view, glassy past it.
   useEffect(() => {
@@ -79,7 +92,7 @@ function DesktopNavbar() {
           onClick={handleNavClick("home")}
           className="text-fg-muted hover:text-fg-primary font-mono text-base tracking-wide transition-colors"
         >
-          <span className="text-fg-dim">{"// "}</span>portfolio
+          <span className="text-fg-dim">{"// "}</span>{dict.nav.portfolio}
         </a>
 
         <ul className="flex items-center gap-7 font-mono">
@@ -95,7 +108,7 @@ function DesktopNavbar() {
                     : "text-fg-muted hover:text-fg-primary",
                 )}
               >
-                {section.label.toLowerCase()}
+                {labelFor(section.id).toLowerCase()}
               </a>
             </li>
           ))}
@@ -105,17 +118,19 @@ function DesktopNavbar() {
   );
 }
 
-function MobileStaggeredNav() {
+function MobileStaggeredNav({ dict }: { dict: Dictionary }) {
+  const labelFor = makeLabelFor(dict);
+
   const items: StaggeredMenuItem[] = navSections.map((s) => ({
-    label: s.label,
+    label: labelFor(s.id),
     link: `#${s.id}`,
-    ariaLabel: `Go to ${s.label}`,
+    ariaLabel: `${dict.nav.goTo} ${labelFor(s.id)}`,
   }));
 
   const socialItems = [
-    { label: "LinkedIn", link: siteConfig.socials.linkedin },
-    { label: "GitHub", link: siteConfig.socials.github },
-    { label: "Email", link: siteConfig.socials.gmail },
+    { label: dict.footer.socials.linkedin, link: siteConfig.socials.linkedin },
+    { label: dict.footer.socials.github, link: siteConfig.socials.github },
+    { label: dict.footer.socials.email, link: siteConfig.socials.gmail },
   ];
 
   const handleItemClick = (item: StaggeredMenuItem) => {
@@ -138,7 +153,7 @@ function MobileStaggeredNav() {
       logoNode={
         <span className="font-mono text-sm">
           <span className="text-fg-dim">{"// "}</span>
-          <span className="text-fg-muted">portfolio</span>
+          <span className="text-fg-muted">{dict.nav.portfolio}</span>
         </span>
       }
       onItemClick={handleItemClick}

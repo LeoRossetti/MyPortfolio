@@ -9,6 +9,15 @@ import { TechChip } from "@/components/site/TechChip";
 
 type Props = {
   entry: ExperienceEntry;
+  /** Localised copy for this entry (role, location, summary, highlights). */
+  entryCopy: {
+    role: string;
+    location: string;
+    summary: string;
+    highlights: readonly string[];
+  };
+  /** Localised label rendered when `isCurrent` is true. */
+  presentLabel: string;
   isCurrent?: boolean;
   className?: string;
 };
@@ -20,18 +29,15 @@ type Props = {
  * (no nested variant staggers) — nested `staggerChildren` can fail
  * to cascade in certain motion v12 tree shapes.
  */
-export function TimelineEntry({ entry, isCurrent, className }: Props) {
-  const {
-    company,
-    role,
-    start,
-    end,
-    location,
-    summary,
-    highlights,
-    tech,
-    url,
-  } = entry;
+export function TimelineEntry({
+  entry,
+  entryCopy,
+  presentLabel,
+  isCurrent,
+  className,
+}: Props) {
+  const { company, start, end, tech, url } = entry;
+  const { role, location, summary, highlights } = entryCopy;
 
   return (
     <motion.article
@@ -78,7 +84,7 @@ export function TimelineEntry({ entry, isCurrent, className }: Props) {
                 className="bg-accent-primary size-1.5 animate-pulse rounded-full shadow-[0_0_8px_var(--accent-primary)]"
               />
             )}
-            {end}
+            {end === "Present" ? presentLabel : end}
           </span>
         </div>
       </motion.div>

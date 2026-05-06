@@ -3,10 +3,13 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ServiceCard } from "@/components/site/ServiceCard";
-import { services, servicesCopy, type Service } from "@/lib/data/services";
+import { services, type Service } from "@/lib/data/services";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import type { Dictionary } from "@/lib/i18n/types";
 
-export function Services() {
+type ServiceCopy = Dictionary["services"]["items"][keyof Dictionary["services"]["items"]];
+
+export function Services({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="services"
@@ -23,22 +26,22 @@ export function Services() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {servicesCopy.eyebrow}
+          {dict.services.eyebrow}
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">What I </span>
+          <span className="text-fg-primary">{dict.services.headingLead} </span>
           <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
-            work on
+            {dict.services.headingAccent}
           </span>
         </motion.h2>
         <motion.p
           variants={fadeUp}
           className="text-fg-muted max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          {servicesCopy.subheading}
+          {dict.services.subheading}
         </motion.p>
       </motion.div>
 
@@ -50,7 +53,11 @@ export function Services() {
         className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6"
       >
         {services.map((service) => (
-          <ServiceCardItem key={service.id} service={service} />
+          <ServiceCardItem
+            key={service.id}
+            service={service}
+            copy={dict.services.items[service.id]}
+          />
         ))}
       </motion.div>
     </section>
@@ -67,7 +74,13 @@ export function Services() {
  *   - `x` applies a soft horizontal parallax to the wide (`col-span-8`)
  *     cards only — ~16px drift across the full scroll journey.
  */
-function ServiceCardItem({ service }: { service: Service }) {
+function ServiceCardItem({
+  service,
+  copy,
+}: {
+  service: Service;
+  copy: ServiceCopy;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -90,7 +103,7 @@ function ServiceCardItem({ service }: { service: Service }) {
         style={{ scale, x }}
         className="h-full"
       >
-        <ServiceCard service={service} />
+        <ServiceCard service={service} copy={copy} />
       </motion.div>
     </div>
   );

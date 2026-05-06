@@ -3,6 +3,7 @@
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { navSections, siteConfig } from "@/lib/data/nav";
+import type { Dictionary } from "@/lib/i18n/types";
 
 /**
  * Site footer — three groups side-by-side on md+, stacked on mobile.
@@ -11,8 +12,14 @@ import { navSections, siteConfig } from "@/lib/data/nav";
  *  - Inline section nav
  *  - Social icon row
  */
-export function Footer() {
+export function Footer({ dict }: { dict: Dictionary }) {
   const year = new Date().getFullYear();
+
+  // Mirrors the Navbar resolver: section ids map to dictionary nav keys,
+  // with `services` rerouted to the `work` label so the footer reads the
+  // same as the top-of-page navigation.
+  const labelFor = (id: string) =>
+    (dict.nav as Record<string, string>)[id === "services" ? "work" : id] ?? id;
 
   return (
     <footer className="bg-bg-base border-border-subtle border-t">
@@ -24,13 +31,13 @@ export function Footer() {
               {siteConfig.name}
             </p>
             <p className="text-fg-dim mt-1 text-sm">
-              © {year} · All rights reserved
+              © {year} · {dict.footer.rights}
             </p>
           </div>
 
           {/* Section nav */}
           <nav
-            aria-label="Footer"
+            aria-label={dict.footer.ariaLabel}
             className="flex flex-wrap gap-x-6 gap-y-2"
           >
             {navSections.map((section) => (
@@ -39,7 +46,7 @@ export function Footer() {
                 href={`#${section.id}`}
                 className="text-fg-muted hover:text-fg-primary text-sm transition-colors"
               >
-                {section.label}
+                {labelFor(section.id)}
               </a>
             ))}
           </nav>
@@ -51,7 +58,7 @@ export function Footer() {
                 href={siteConfig.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn"
+                aria-label={dict.footer.socials.linkedin}
                 className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <LinkedinIcon className="size-5" />
@@ -62,7 +69,7 @@ export function Footer() {
                 href={siteConfig.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub"
+                aria-label={dict.footer.socials.github}
                 className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <GithubIcon className="size-5" />
@@ -71,7 +78,7 @@ export function Footer() {
             <li>
               <a
                 href={siteConfig.socials.gmail}
-                aria-label="Email"
+                aria-label={dict.footer.socials.email}
                 className="text-fg-muted hover:text-fg-primary inline-flex size-11 items-center justify-center rounded-md transition-colors"
               >
                 <Mail className="size-5" />

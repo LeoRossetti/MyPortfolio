@@ -4,10 +4,15 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ProjectCard } from "@/components/site/ProjectCard";
 import { PlaceholderProjectCard } from "@/components/site/PlaceholderProjectCard";
-import { projects, projectsCopy, type Project } from "@/lib/data/projects";
+import { projects, type Project } from "@/lib/data/projects";
 import { fadeUp, popIn, staggerChildren } from "@/lib/motion";
+import type { Dictionary } from "@/lib/i18n/types";
 
-export function Projects() {
+type ProjectCopy = Dictionary["projects"]["items"][keyof Dictionary["projects"]["items"]];
+type StatusLabels = Dictionary["projects"]["statusLabels"];
+type LinkLabels = Dictionary["projects"]["linkLabels"];
+
+export function Projects({ dict }: { dict: Dictionary }) {
   return (
     <section
       id="projects"
@@ -24,22 +29,22 @@ export function Projects() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {projectsCopy.eyebrow}
+          {dict.projects.eyebrow}
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">Shipped </span>
+          <span className="text-fg-primary">{dict.projects.headingLead} </span>
           <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
-            &amp; shipping
+            {dict.projects.headingAccent}
           </span>
         </motion.h2>
         <motion.p
           variants={fadeUp}
           className="text-fg-muted max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          {projectsCopy.subheading}
+          {dict.projects.subheading}
         </motion.p>
       </motion.div>
 
@@ -51,7 +56,13 @@ export function Projects() {
         className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6"
       >
         {projects.map((project) => (
-          <ProjectCardItem key={project.id} project={project} />
+          <ProjectCardItem
+            key={project.id}
+            project={project}
+            copy={dict.projects.items[project.id as keyof typeof dict.projects.items]}
+            statusLabels={dict.projects.statusLabels}
+            linkLabels={dict.projects.linkLabels}
+          />
         ))}
       </motion.div>
     </section>
@@ -65,7 +76,17 @@ export function Projects() {
  * ref was on the animated motion.div (popIn does scale 0.95→1), the
  * measurement would drift and scroll progress could mis-fire.
  */
-function ProjectCardItem({ project }: { project: Project }) {
+function ProjectCardItem({
+  project,
+  copy,
+  statusLabels,
+  linkLabels,
+}: {
+  project: Project;
+  copy: ProjectCopy;
+  statusLabels: StatusLabels;
+  linkLabels: LinkLabels;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -77,9 +98,18 @@ function ProjectCardItem({ project }: { project: Project }) {
     <div ref={ref} className={project.colSpan}>
       <motion.div variants={popIn} className="h-full">
         {project.status === "live" ? (
-          <ProjectCard project={project} mediaY={mediaY} />
+          <ProjectCard
+            project={project}
+            copy={copy}
+            linkLabels={linkLabels}
+            mediaY={mediaY}
+          />
         ) : (
-          <PlaceholderProjectCard project={project} mediaY={mediaY} />
+          <PlaceholderProjectCard
+            copy={copy}
+            statusLabel={statusLabels[project.status]}
+            mediaY={mediaY}
+          />
         )}
       </motion.div>
     </div>
