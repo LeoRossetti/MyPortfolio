@@ -23,7 +23,7 @@
 | `lib/i18n/dictionaries/en.ts` | English copy — full dictionary, single source of truth for shape |
 | `lib/i18n/dictionaries/pt.ts` | Portuguese copy — same shape (placeholder English strings in Phase 1, real PT in Phase 3) |
 | `lib/i18n/get-dictionary.ts` | Server util: `getDictionary(locale)` returns the dictionary for a locale |
-| `middleware.ts` | Locale routing — rewrites `/` to `en` internally; in Phase 3, also reads `NEXT_LOCALE` cookie for return-visit redirect |
+| `proxy.ts` | Locale routing — rewrites `/` to `en` internally; in Phase 3, also reads `NEXT_LOCALE` cookie for return-visit redirect. **Note:** Next 16 renamed `middleware.ts` → `proxy.ts`; export is `proxy` not `middleware`. |
 | `app/[locale]/layout.tsx` | Locale-aware layout: sets `<html lang>`, calls `generateMetadata`, fetches the dictionary, renders Navbar/Footer |
 | `app/[locale]/page.tsx` | Section composition (was `app/page.tsx`) |
 | `app/[locale]/not-found.tsx` | Locale-aware 404 |
@@ -65,31 +65,19 @@
 
 ---
 
-### Task 1: Read Next.js 16 i18n & middleware docs
+### Task 1: Verify Next.js 16 i18n & proxy docs (✅ done by controller)
 
-**Files:**
-- Read-only: `node_modules/next/dist/docs/**`
+**Findings already verified — Phase 1 controller dispatched a research subagent against `node_modules/next/dist/docs/` and confirmed:**
 
-Per `AGENTS.md`, this is "NOT the Next.js you know" — APIs may differ from training data. Confirm the App Router middleware shape and dynamic-segment params type before writing code.
+1. **Renamed: `middleware.ts` → `proxy.ts`.** Export name is `proxy`, not `middleware`. File lives at the project root (alongside `next.config.ts`). Source: `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md:11`.
+2. **Async params:** In App Router pages and layouts, `params` is a `Promise<{...}>`. Use `const { locale } = await params`. Source: `dynamic-routes.md:18-26`.
+3. **`generateStaticParams`** returns `[{ locale: 'en' }, { locale: 'pt' }]` shape (unchanged).
+4. **`headers()` from `next/headers` is async** — `const hdrs = await headers()`. Source: `headers.md:6,12`.
+5. **`generateMetadata` async params** — same Promise pattern as pages: `params: Promise<{ locale: string }>`.
+6. **`config.matcher`** array shape — unchanged from earlier versions.
+7. **`NextResponse.next({ request: { headers } })` and `NextResponse.rewrite(url, { request: { headers } })`** both supported for forwarding modified request headers downstream. Source: `next-response.md:141-157`, `proxy.md:392-397`.
 
-- [ ] **Step 1: Locate the relevant docs**
-
-```bash
-ls C:/Users/leofr/Documents/GitHub/MyPortfolio/node_modules/next/dist/docs/
-```
-
-Look for files matching `*middleware*`, `*i18n*`, `*internationaliz*`, `*routing*`. Read each one. Specifically confirm:
-
-- The signature for `middleware(request: NextRequest)` and the available `NextResponse.rewrite()` / `redirect()` / `next()` helpers in v16.
-- Whether `params` in `app/[locale]/layout.tsx` is a Promise (Next 15+ async params) or a plain object.
-- The `generateStaticParams` shape for locale segments.
-- Any new `i18n` config in `next.config.ts` (likely none for App Router; this is middleware-driven).
-
-- [ ] **Step 2: Note any deviations from this plan**
-
-Record findings inline as comments at the top of `middleware.ts` when you write it (Task 6). If a documented API differs from what this plan assumes, follow the docs and flag the divergence in the commit message.
-
-- [ ] **Step 3: No commit** (read-only research)
+This task is therefore already complete. The plan code blocks reflect the verified API. Proceed to Task 2.
 
 ---
 
@@ -792,7 +780,7 @@ export default function LocaleNotFound() {
 }
 ```
 
-- [ ] **Step 4: Rewrite `app/layout.tsx`** to a thin shell that reads the locale from the `x-locale` header set by middleware (added in Task 9):
+- [ ] **Step 4: Rewrite `app/layout.tsx`** to a thin shell that reads the locale from the `x-locale` header set by `proxy.ts` (added in Task 9):
 
 ```tsx
 import { headers } from "next/headers";
@@ -815,7 +803,7 @@ const spaceGrotesk = Space_Grotesk({ variable: "--font-space-grotesk", subsets: 
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // Middleware sets x-locale on every request (see Task 9). If absent
+  // proxy.ts sets x-locale on every request (see Task 9). If absent
   // (e.g. during build of a static asset), fall back to defaultLocale.
   const hdrs = await headers();
   const headerLocale = hdrs.get("x-locale");
@@ -1332,16 +1320,18 @@ npm run lint
 
 Expected: PASS or only known existing warnings. Fix new errors introduced by this task.
 
-- [ ] **Step 12: No commit yet** — middleware not in place; `/` will 404 because there is no `app/page.tsx` and no rewrite. Task 9 fixes this.
+- [ ] **Step 12: No commit yet** — `proxy.ts` not in place; `/` will 404 because there is no `app/page.tsx` and no rewrite. Task 9 fixes this.
 
 ---
 
-### Task 9: Add middleware, verify Phase 1, commit
+### Task 9: Add `proxy.ts`, verify Phase 1, commit
 
 **Files:**
-- Create: `middleware.ts` (at repo root, alongside `next.config.ts`)
+- Create: `proxy.ts` (at repo root, alongside `next.config.ts`)
 
-- [ ] **Step 1: Write `middleware.ts`**
+> Next.js 16 renamed `middleware.ts` → `proxy.ts`. Same matcher config; the export must be named `proxy` (not `middleware`) and the file must be `proxy.ts`. Source: `node_modules/next/dist/docs/01-app/03-api-reference/03-file-conventions/proxy.md`.
+
+- [ ] **Step 1: Write `proxy.ts`**
 
 ```ts
 import { NextResponse, type NextRequest } from "next/server";
@@ -1350,7 +1340,7 @@ import { defaultLocale, isLocale } from "@/lib/i18n/config";
 const PUBLIC_FILE = /\.(.*)$/;
 
 /**
- * Locale-prefixed routing.
+ * Locale-prefixed routing (Next 16 proxy.ts — formerly middleware.ts).
  *
  * - "/" rewrites internally to "/{defaultLocale}" so the user-visible URL
  *   stays clean while the file system has app/[locale]/page.tsx.
@@ -1361,7 +1351,7 @@ const PUBLIC_FILE = /\.(.*)$/;
  *
  * Cookie-based redirect is wired in Phase 3 (Task 16).
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -1433,7 +1423,7 @@ Verify:
 Verify:
 - Page renders identically to `/` (PT dictionary is still placeholder English in Phase 1).
 - URL bar shows `/pt`.
-- View Source: `<html lang="pt-BR">` (set server-side from the `x-locale` middleware header).
+- View Source: `<html lang="pt-BR">` (set server-side from the `x-locale` header injected by `proxy.ts`).
 
 - [ ] **Step 6: Manual verification — open `http://localhost:3000/xyz`**
 
@@ -1442,7 +1432,7 @@ Expected: 404 (the `notFound()` call in `[locale]/page.tsx` because `xyz` isn't 
 - [ ] **Step 7: Stop dev server, commit**
 
 ```bash
-git add app/ components/ lib/ middleware.ts
+git add app/ components/ lib/ proxy.ts
 git commit -m "Move site under [locale] route, wire dictionary through components"
 ```
 
@@ -2228,10 +2218,10 @@ Expected: PASS.
 
 ---
 
-### Task 16: Cookie persistence in middleware
+### Task 16: Cookie persistence in `proxy.ts`
 
 **Files:**
-- Modify: `middleware.ts`
+- Modify: `proxy.ts`
 - Modify: `components/site/LocaleToggle.tsx` (set the cookie on switch)
 
 - [ ] **Step 1: Update `LocaleToggle` to write the cookie**
@@ -2251,12 +2241,12 @@ const switchTo = useCallback(
 );
 ```
 
-- [ ] **Step 2: Update `middleware.ts` to honour the cookie**
+- [ ] **Step 2: Update `proxy.ts` to honour the cookie**
 
-Replace the existing middleware function body with:
+Replace the existing `proxy` function body with:
 
 ```ts
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -2316,7 +2306,7 @@ npm run dev
 - [ ] **Step 5: Stop dev server, commit Phase 3**
 
 ```bash
-git add lib/i18n/dictionaries/pt.ts app/[locale]/opengraph-image.tsx app/sitemap.ts middleware.ts components/site/LocaleToggle.tsx
+git add lib/i18n/dictionaries/pt.ts app/[locale]/opengraph-image.tsx app/sitemap.ts proxy.ts components/site/LocaleToggle.tsx
 git commit -m "Translate site to Portuguese, add hreflang sitemap and locale cookie"
 ```
 
@@ -2381,4 +2371,9 @@ This plan was self-reviewed against the spec. Coverage check:
 - ✅ Risk #3 (slow router.push) — Task 11 (`router.prefetch` in `switchTo`)
 - ✅ Phased delivery with stop points — explicit "STOP" markers at end of Phases 1, 2, 3.
 
-One unverified Next.js 16 specific (Risk #5): the exact shape of `params` in App Router layouts/pages and the middleware API. Task 1 covers this — read the docs and adjust before writing code.
+Next.js 16 specifics verified during Task 1 (controller-side research):
+- `middleware.ts` is renamed to `proxy.ts` (export `proxy`).
+- `params` is `Promise<{...}>` — `await params` in pages/layouts/`generateMetadata`.
+- `headers()` is async — `await headers()`.
+- `NextResponse.next({ request: { headers } })` and `.rewrite(url, { request: { headers } })` both forward modified request headers downstream.
+- Code blocks in this plan reflect the verified API.
