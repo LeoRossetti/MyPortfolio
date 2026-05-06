@@ -8,27 +8,42 @@ import { Services } from "@/components/sections/Services";
 import { Projects } from "@/components/sections/Projects";
 import { Experience } from "@/components/sections/Experience";
 import { Contact } from "@/components/sections/Contact";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { isLocale, locales } from "@/lib/i18n/config";
+import { notFound } from "next/navigation";
 
-export default function Home() {
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: rawLocale } = await params;
+  if (!isLocale(rawLocale)) notFound();
+  const dict = await getDictionary(rawLocale);
+
   return (
     <>
-      <Navbar />
+      <Navbar dict={dict} />
 
       <main className="relative flex flex-1 flex-col">
-        <Hero />
-        <StackStrip />
-        <About />
+        <Hero dict={dict} />
+        <StackStrip dict={dict} />
+        <About dict={dict} />
         <SectionDivider />
-        <Services />
+        <Services dict={dict} />
         <SectionDivider />
-        <Projects />
+        <Projects dict={dict} />
         <SectionDivider />
-        <Experience />
+        <Experience dict={dict} />
         <SectionDivider />
-        <Contact />
+        <Contact dict={dict} />
       </main>
 
-      <Footer />
+      <Footer dict={dict} />
     </>
   );
 }

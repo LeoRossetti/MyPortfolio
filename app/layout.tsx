@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -8,83 +8,26 @@ import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvide
 import { TerminalBoot } from "@/components/animation/TerminalBoot";
 import { SiteBackdrop } from "@/components/layout/SiteBackdrop";
 import ClickSpark from "@/components/reactbits/ClickSpark";
-import { siteUrl } from "@/lib/site";
+import { defaultLocale, isLocale } from "@/lib/i18n/config";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"], display: "swap" });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
+const spaceGrotesk = Space_Grotesk({ variable: "--font-space-grotesk", subsets: ["latin"], display: "swap" });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    default: "Leo Rossetti — Full-stack Developer",
-    template: "%s · Leo Rossetti",
-  },
-  description:
-    "Full-stack developer. Ships products, not prototypes. TypeScript, React, Next.js, React Native, Node.js, Python, C#.",
-  applicationName: "Leo Rossetti Portfolio",
-  authors: [{ name: "Leo Rossetti" }],
-  creator: "Leo Rossetti",
-  keywords: [
-    "Leo Rossetti",
-    "full-stack developer",
-    "TypeScript",
-    "React",
-    "Next.js",
-    "React Native",
-    "Node.js",
-    "Convex",
-    "Clerk",
-  ],
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Leo Rossetti — Full-stack Developer",
-    description:
-      "Full-stack developer. Ships products, not prototypes.",
-    type: "website",
-    locale: "en_US",
-    url: siteUrl,
-    siteName: "Leo Rossetti",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Leo Rossetti — Full-stack Developer",
-    description:
-      "Full-stack developer. Ships products, not prototypes.",
-  },
-  robots: { index: true, follow: true },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#171717",
-  colorScheme: "dark",
-  width: "device-width",
-  initialScale: 1,
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  // proxy.ts sets x-locale on every request (Task 9). If absent (e.g. during
+  // static-asset build), fall back to defaultLocale.
+  const hdrs = await headers();
+  const headerLocale = hdrs.get("x-locale");
+  const locale = headerLocale && isLocale(headerLocale) ? headerLocale : defaultLocale;
+  const htmlLang = locale === "pt" ? "pt-BR" : "en";
+
   return (
     <html
-      lang="en"
+      lang={htmlLang}
       className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
       suppressHydrationWarning
     >
