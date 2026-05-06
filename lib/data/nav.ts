@@ -1,20 +1,24 @@
-export type NavSection = {
-  id: string;
-  label: string;
-};
+export type NavSectionId =
+  | "home"
+  | "about"
+  | "services"
+  | "projects"
+  | "experience"
+  | "contact";
+
+export type NavSection = { id: NavSectionId };
 
 export const navSections: NavSection[] = [
-  { id: "home", label: "Home" },
-  { id: "about", label: "About" },
-  { id: "services", label: "Work" },
-  { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
-  { id: "contact", label: "Contact" },
+  { id: "home" },
+  { id: "about" },
+  { id: "services" },
+  { id: "projects" },
+  { id: "experience" },
+  { id: "contact" },
 ];
 
 export const siteConfig = {
   name: "Leo Rossetti",
-  tagline: "Full-stack dev. Ships products, not prototypes.",
   email: "leo.francatto@gmail.com",
   socials: {
     github: "https://github.com/LeoRossetti",
