@@ -8,6 +8,7 @@ import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import StaggeredMenu, {
   type StaggeredMenuItem,
 } from "@/components/reactbits/StaggeredMenu";
+import { LocaleToggle } from "@/components/site/LocaleToggle";
 import type { Dictionary } from "@/lib/i18n/types";
 
 /**
@@ -95,24 +96,31 @@ function DesktopNavbar({ dict }: { dict: Dictionary }) {
           <span className="text-fg-dim">{"// "}</span>{dict.nav.portfolio}
         </a>
 
-        <ul className="flex items-center gap-7 font-mono">
-          {navSections.slice(1).map((section) => (
-            <li key={section.id}>
-              <a
-                href={`#${section.id}`}
-                onClick={handleNavClick(section.id)}
-                className={cn(
-                  "text-base transition-colors",
-                  activeId === section.id
-                    ? "text-fg-primary"
-                    : "text-fg-muted hover:text-fg-primary",
-                )}
-              >
-                {labelFor(section.id).toLowerCase()}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="flex items-center gap-6">
+          <ul className="flex items-center gap-7 font-mono">
+            {navSections.slice(1).map((section) => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  onClick={handleNavClick(section.id)}
+                  className={cn(
+                    "text-base transition-colors",
+                    activeId === section.id
+                      ? "text-fg-primary"
+                      : "text-fg-muted hover:text-fg-primary",
+                  )}
+                >
+                  {labelFor(section.id).toLowerCase()}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <LocaleToggle
+            ariaLabel={dict.locale.ariaLabel}
+            enLabel={dict.locale.en}
+            ptLabel={dict.locale.pt}
+          />
+        </div>
       </div>
     </motion.header>
   );
@@ -157,6 +165,14 @@ function MobileStaggeredNav({ dict }: { dict: Dictionary }) {
         </span>
       }
       onItemClick={handleItemClick}
+      extras={
+        <LocaleToggle
+          ariaLabel={dict.locale.ariaLabel}
+          enLabel={dict.locale.en}
+          ptLabel={dict.locale.pt}
+          size="lg"
+        />
+      }
     />
   );
 }

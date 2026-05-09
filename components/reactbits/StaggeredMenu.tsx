@@ -49,6 +49,12 @@ type Props = {
   onMenuOpen?: () => void;
   onMenuClose?: () => void;
   onItemClick?: (item: StaggeredMenuItem) => void;
+  /**
+   * Optional slot rendered inside the open panel between the menu item list
+   * and the socials row. Use this to add controls (e.g. a locale toggle)
+   * without forking the component.
+   */
+  extras?: ReactNode;
 };
 
 export default function StaggeredMenu({
@@ -70,6 +76,7 @@ export default function StaggeredMenu({
   onMenuOpen,
   onMenuClose,
   onItemClick,
+  extras,
 }: Props) {
   const [open, setOpen] = useState(false);
   const openRef = useRef(false);
@@ -568,6 +575,8 @@ export default function StaggeredMenu({
               </li>
             )}
           </ul>
+
+          {extras ? <div className="sm-panel-extras">{extras}</div> : null}
 
           {displaySocials && socialItems && socialItems.length > 0 && (
             <div className="sm-socials" aria-label="Social links">
