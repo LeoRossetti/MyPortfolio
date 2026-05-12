@@ -1,11 +1,21 @@
 import { ImageResponse } from "next/og";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { isLocale } from "@/lib/i18n/config";
 
 export const runtime = "edge";
 export const alt = "Leo Rossetti — Full-stack Developer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+export default async function OpenGraphImage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale: rawLocale } = await params;
+  const locale = isLocale(rawLocale) ? rawLocale : "en";
+  const dict = await getDictionary(locale);
+
   return new ImageResponse(
     (
       <div
@@ -85,7 +95,7 @@ export default function OpenGraphImage() {
               display: "flex",
             }}
           >
-            Full-stack developer. Ships products, not prototypes.
+            {dict.meta.ogDescription}
           </div>
         </div>
 
