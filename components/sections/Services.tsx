@@ -5,11 +5,13 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { ServiceCard } from "@/components/site/ServiceCard";
 import { services, type Service } from "@/lib/data/services";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
 type ServiceCopy = Dictionary["services"]["items"][keyof Dictionary["services"]["items"]];
 
-export function Services({ dict }: { dict: Dictionary }) {
+export function Services() {
+  const dict = useDictionary();
   return (
     <section
       id="services"

@@ -4,9 +4,10 @@ import { motion } from "motion/react";
 import { TimelineEntry } from "@/components/site/TimelineEntry";
 import { experience } from "@/lib/data/experience";
 import { fadeUp, staggerChildren } from "@/lib/motion";
-import type { Dictionary } from "@/lib/i18n/types";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
-export function Experience({ dict }: { dict: Dictionary }) {
+export function Experience() {
+  const dict = useDictionary();
   return (
     <section
       id="experience"

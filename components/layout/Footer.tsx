@@ -3,7 +3,7 @@
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { navSections, siteConfig } from "@/lib/data/nav";
-import type { Dictionary } from "@/lib/i18n/types";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 /**
  * Site footer — three groups side-by-side on md+, stacked on mobile.
@@ -12,7 +12,8 @@ import type { Dictionary } from "@/lib/i18n/types";
  *  - Inline section nav
  *  - Social icon row
  */
-export function Footer({ dict }: { dict: Dictionary }) {
+export function Footer() {
+  const dict = useDictionary();
   const year = new Date().getFullYear();
 
   // Mirrors the Navbar resolver: section ids map to dictionary nav keys,

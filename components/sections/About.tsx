@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { fadeUp, staggerChildren } from "@/lib/motion";
-import type { Dictionary } from "@/lib/i18n/types";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 /**
  * Bio-only About section. Matches the container width of every other
@@ -14,7 +14,8 @@ import type { Dictionary } from "@/lib/i18n/types";
  * the grid-based sections that follow. Each block staggers in on its
  * own beat; the eyebrow drifts at half speed as the section scrolls.
  */
-export function About({ dict }: { dict: Dictionary }) {
+export function About() {
+  const dict = useDictionary();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,

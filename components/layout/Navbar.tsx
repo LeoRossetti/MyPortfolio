@@ -9,6 +9,7 @@ import StaggeredMenu, {
   type StaggeredMenuItem,
 } from "@/components/reactbits/StaggeredMenu";
 import { LocaleToggle } from "@/components/site/LocaleToggle";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
 /**
@@ -27,12 +28,13 @@ function makeLabelFor(dict: Dictionary) {
  * and a fullscreen StaggeredMenu experience on mobile. Conditional
  * mount (vs CSS hide/show) keeps GSAP off the desktop bundle path.
  */
-export function Navbar({ dict }: { dict: Dictionary }) {
+export function Navbar() {
   const isMobile = useMediaQuery("(max-width: 767px)");
-  return isMobile ? <MobileStaggeredNav dict={dict} /> : <DesktopNavbar dict={dict} />;
+  return isMobile ? <MobileStaggeredNav /> : <DesktopNavbar />;
 }
 
-function DesktopNavbar({ dict }: { dict: Dictionary }) {
+function DesktopNavbar() {
+  const dict = useDictionary();
   const [activeId, setActiveId] = useState<string>(navSections[0]?.id ?? "");
   const [scrolled, setScrolled] = useState(false);
   const labelFor = makeLabelFor(dict);
@@ -126,7 +128,8 @@ function DesktopNavbar({ dict }: { dict: Dictionary }) {
   );
 }
 
-function MobileStaggeredNav({ dict }: { dict: Dictionary }) {
+function MobileStaggeredNav() {
+  const dict = useDictionary();
   const labelFor = makeLabelFor(dict);
 
   const items: StaggeredMenuItem[] = navSections.map((s) => ({

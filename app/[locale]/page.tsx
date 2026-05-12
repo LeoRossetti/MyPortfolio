@@ -8,7 +8,9 @@ import { Services } from "@/components/sections/Services";
 import { Projects } from "@/components/sections/Projects";
 import { Experience } from "@/components/sections/Experience";
 import { Contact } from "@/components/sections/Contact";
-import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { DictionaryProvider } from "@/components/i18n/DictionaryProvider";
+import enDict from "@/lib/i18n/dictionaries/en";
+import ptDict from "@/lib/i18n/dictionaries/pt";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { notFound } from "next/navigation";
 
@@ -23,27 +25,29 @@ export default async function Home({
 }) {
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
-  const dict = await getDictionary(rawLocale);
 
   return (
-    <>
-      <Navbar dict={dict} />
+    <DictionaryProvider
+      initialLocale={rawLocale}
+      dictionaries={{ en: enDict, pt: ptDict }}
+    >
+      <Navbar />
 
       <main className="relative flex flex-1 flex-col">
-        <Hero dict={dict} />
-        <StackStrip dict={dict} />
-        <About dict={dict} />
+        <Hero />
+        <StackStrip />
+        <About />
         <SectionDivider />
-        <Services dict={dict} />
+        <Services />
         <SectionDivider />
-        <Projects dict={dict} />
+        <Projects />
         <SectionDivider />
-        <Experience dict={dict} />
+        <Experience />
         <SectionDivider />
-        <Contact dict={dict} />
+        <Contact />
       </main>
 
-      <Footer dict={dict} />
-    </>
+      <Footer />
+    </DictionaryProvider>
   );
 }

@@ -6,13 +6,15 @@ import { ProjectCard } from "@/components/site/ProjectCard";
 import { PlaceholderProjectCard } from "@/components/site/PlaceholderProjectCard";
 import { projects, type Project } from "@/lib/data/projects";
 import { fadeUp, popIn, staggerChildren } from "@/lib/motion";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
 type ProjectCopy = Dictionary["projects"]["items"][keyof Dictionary["projects"]["items"]];
 type StatusLabels = Dictionary["projects"]["statusLabels"];
 type LinkLabels = Dictionary["projects"]["linkLabels"];
 
-export function Projects({ dict }: { dict: Dictionary }) {
+export function Projects() {
+  const dict = useDictionary();
   return (
     <section
       id="projects"

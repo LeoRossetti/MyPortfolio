@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { LogoLoop } from "@/components/reactbits/LogoLoop";
 import { techLogos } from "@/lib/data/logos";
-import type { Dictionary } from "@/lib/i18n/types";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -12,7 +12,8 @@ const ease = [0.22, 1, 0.36, 1] as const;
  * Above-the-fold stack signal without bloating the hero composition.
  * Logo-level hover brightens icons from muted grey to near-white.
  */
-export function StackStrip({ dict }: { dict: Dictionary }) {
+export function StackStrip() {
+  const dict = useDictionary();
   return (
     <motion.section
       initial={{ opacity: 0, y: 24 }}

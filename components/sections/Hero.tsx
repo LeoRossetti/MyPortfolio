@@ -4,7 +4,7 @@ import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "motion/react";
 import TextType from "@/components/reactbits/TextType";
-import type { Dictionary } from "@/lib/i18n/types";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Heavy (three + custom shader + image texture). Keep it out of the initial
@@ -22,7 +22,8 @@ const HERO_IMAGE =
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-export function Hero({ dict }: { dict: Dictionary }) {
+export function Hero() {
+  const dict = useDictionary();
   const heroRef = useRef<HTMLElement>(null);
   // Mobile gets a static cover-fit image instead of the GridDistortion
   // shader. Touch devices don't fire mousemove (so the effect is just a

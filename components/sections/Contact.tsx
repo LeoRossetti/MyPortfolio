@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { siteConfig } from "@/lib/data/nav";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
 type Channel = {
@@ -20,7 +21,8 @@ type Channel = {
 
 type CopyDict = Dictionary["contact"]["copy"];
 
-export function Contact({ dict }: { dict: Dictionary }) {
+export function Contact() {
+  const dict = useDictionary();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
