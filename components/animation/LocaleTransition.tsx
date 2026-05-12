@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { motion, AnimatePresence } from "motion/react";
@@ -31,9 +30,12 @@ const TIMING = {
 } as const;
 
 export function LocaleTransition() {
-  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("idle");
   const [target, setTarget] = useState<Locale | null>(null);
+  // Ref (not state) so we don't re-render when only the callback identity
+  // changes, and so the GSAP timeline reads the latest handler at fire time
+  // instead of capturing a stale closure.
+  const swapHandlerRef = useRef<(() => void) | null>(null);
   const [reducedMotion, setReducedMotion] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -48,8 +50,9 @@ export function LocaleTransition() {
   }, []);
 
   const start = useCallback(
-    ({ target: newTarget }: StartTransitionDetail) => {
+    ({ target: newTarget, onSwap }: StartTransitionDetail) => {
       if (phase !== "idle") return;
+      swapHandlerRef.current = onSwap ?? null;
       setTarget(newTarget);
       setPhase("running");
     },
@@ -60,17 +63,20 @@ export function LocaleTransition() {
   // Reduced-motion path: 200ms solid cross-fade, no GSAP
   useEffect(() => {
     if (!reducedMotion || phase !== "running" || !target) return;
-    const destination = target === "en" ? "/" : `/${target}`;
-    const pushTimer = window.setTimeout(() => router.push(destination), 100);
+    const pushTimer = window.setTimeout(
+      () => swapHandlerRef.current?.(),
+      100,
+    );
     const endTimer = window.setTimeout(() => {
       setPhase("idle");
       setTarget(null);
+      swapHandlerRef.current = null;
     }, 200);
     return () => {
       window.clearTimeout(pushTimer);
       window.clearTimeout(endTimer);
     };
-  }, [reducedMotion, phase, target, router]);
+  }, [reducedMotion, phase, target]);
 
   // GSAP path: stagger bars enter -> hold -> stagger exit
   const barsRef = useRef<HTMLDivElement[]>([]);
@@ -82,12 +88,11 @@ export function LocaleTransition() {
       );
       if (bars.length !== NUM_BARS) return;
 
-      const destination = target === "en" ? "/" : `/${target}`;
-
       const tl = gsap.timeline({
         onComplete: () => {
           setPhase("idle");
           setTarget(null);
+          swapHandlerRef.current = null;
         },
       });
 
@@ -105,12 +110,14 @@ export function LocaleTransition() {
       // Hold: empty tween to consume time so the timeline holds full cover
       tl.to({}, { duration: TIMING.hold });
 
-      // Fire router.push at midpoint of the hold (absolute timeline position)
+      // Fire the dictionary swap at midpoint of the hold (absolute timeline
+      // position) — bars are fully covering the viewport, so the React tree
+      // can re-render under the curtain without any visible flash.
       const pushAt =
         TIMING.enterDuration +
         (NUM_BARS - 1) * TIMING.enterStagger +
         TIMING.hold / 2;
-      tl.call(() => router.push(destination), undefined, pushAt);
+      tl.call(() => swapHandlerRef.current?.(), undefined, pushAt);
 
       // Exit: continue staggering down off-screen with a longer, smoother glide
       tl.to(bars, {
@@ -124,7 +131,7 @@ export function LocaleTransition() {
         tl.kill();
       };
     },
-    { dependencies: [phase, target, reducedMotion, router] },
+    { dependencies: [phase, target, reducedMotion] },
   );
 
   if (phase !== "running" || !target) return null;

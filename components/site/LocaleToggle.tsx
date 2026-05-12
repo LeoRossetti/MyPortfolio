@@ -1,10 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { dispatchLocaleTransition } from "@/lib/hooks/use-locale-transition";
-import { useCurrentLocale } from "@/lib/hooks/use-current-locale";
+import { useLocaleSwitcher } from "@/components/i18n/DictionaryProvider";
 import { BrazilFlag } from "@/components/icons/BrazilFlag";
 import { UKFlag } from "@/components/icons/UKFlag";
 import type { Locale } from "@/lib/i18n/config";
@@ -17,16 +16,21 @@ type Props = {
 };
 
 export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props) {
-  const current = useCurrentLocale();
-  const router = useRouter();
-
+  const { locale: current, setLocale } = useLocaleSwitcher();
   const destination: Locale = current === "en" ? "pt" : "en";
 
   const switchTo = useCallback(() => {
+    // Persist for return visits
     document.cookie = `NEXT_LOCALE=${destination}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-    router.prefetch(destination === "en" ? "/" : `/${destination}`);
-    dispatchLocaleTransition(destination);
-  }, [destination, router]);
+
+    // Fire wipe; the transition calls onSwap at the hold midpoint, which is
+    // when we swap the dictionary in place and update the URL bar.
+    dispatchLocaleTransition(destination, () => {
+      setLocale(destination);
+      const newPath = destination === "en" ? "/" : `/${destination}`;
+      window.history.replaceState(null, "", newPath);
+    });
+  }, [destination, setLocale]);
 
   const CurrentFlag = current === "pt" ? BrazilFlag : UKFlag;
   const currentLabel = current === "pt" ? ptLabel : enLabel;

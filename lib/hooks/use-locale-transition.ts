@@ -4,11 +4,24 @@ import type { Locale } from "@/lib/i18n/config";
 
 const EVENT_NAME = "locale-transition:start";
 
-export type StartTransitionDetail = { target: Locale };
+export type StartTransitionDetail = {
+  target: Locale;
+  /**
+   * Called by the transition at the "full cover" hold midpoint. Use it to
+   * swap dictionary state and update the URL while the curtain hides the
+   * change.
+   */
+  onSwap?: () => void;
+};
 
-export function dispatchLocaleTransition(target: Locale) {
+export function dispatchLocaleTransition(
+  target: Locale,
+  onSwap?: () => void,
+) {
   window.dispatchEvent(
-    new CustomEvent<StartTransitionDetail>(EVENT_NAME, { detail: { target } }),
+    new CustomEvent<StartTransitionDetail>(EVENT_NAME, {
+      detail: { target, onSwap },
+    }),
   );
 }
 
