@@ -9,6 +9,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "monthly",
       priority: 1,
+      alternates: {
+        languages: {
+          en: `${siteUrl}/`,
+          "pt-BR": `${siteUrl}/pt`,
+        },
+      },
+    },
+    {
+      url: `${siteUrl}/pt`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          en: `${siteUrl}/`,
+          "pt-BR": `${siteUrl}/pt`,
+        },
+      },
     },
   ];
 }
