@@ -15,9 +15,9 @@ type Phase = "idle" | "running";
 
 const NUM_BARS = 6;
 
-const COLORS: Record<Locale, [string, string]> = {
-  pt: ["#009C3B", "#FFDF00"], // green, yellow alternating
-  en: ["#012169", "#C8102E"], // UK blue, UK red alternating
+const COLORS: Record<Locale, [string, string, string]> = {
+  pt: ["#009C3B", "#FFDF00", "#002776"], // green, yellow, blue cycling
+  en: ["#012169", "#FFFFFF", "#C8102E"], // UK blue, white, red cycling
 };
 
 const TIMING = {
