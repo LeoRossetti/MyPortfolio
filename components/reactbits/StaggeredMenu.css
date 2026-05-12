@@ -49,6 +49,14 @@
   line-height: 1;
 }
 
+.sm-header-extras {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 0.75rem;
+  pointer-events: auto;
+}
+
 .sm-logo-img {
   display: block;
   height: 24px;

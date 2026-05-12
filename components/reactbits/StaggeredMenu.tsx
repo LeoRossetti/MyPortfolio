@@ -55,6 +55,12 @@ type Props = {
    * without forking the component.
    */
   extras?: ReactNode;
+  /**
+   * Optional slot rendered inside the always-visible header bar,
+   * between the logo and the hamburger toggle. Use this to add
+   * controls that should remain accessible even when the menu is closed.
+   */
+  headerExtras?: ReactNode;
 };
 
 export default function StaggeredMenu({
@@ -77,6 +83,7 @@ export default function StaggeredMenu({
   onMenuClose,
   onItemClick,
   extras,
+  headerExtras,
 }: Props) {
   const [open, setOpen] = useState(false);
   const openRef = useRef(false);
@@ -511,6 +518,10 @@ export default function StaggeredMenu({
                 />
               : null}
         </div>
+
+        {headerExtras ? (
+          <div className="sm-header-extras">{headerExtras}</div>
+        ) : null}
 
         <button
           ref={toggleBtnRef}

@@ -165,7 +165,7 @@ function MobileStaggeredNav({ dict }: { dict: Dictionary }) {
         </span>
       }
       onItemClick={handleItemClick}
-      extras={
+      headerExtras={
         <LocaleToggle
           ariaLabel={dict.locale.ariaLabel}
           enLabel={dict.locale.en}
