@@ -22,6 +22,10 @@ export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props
   const switchTo = useCallback(
     (target: Locale) => {
       if (target === current) return;
+      // Persist the choice for return visits. 1-year expiry, root path,
+      // SameSite=Lax (cookie sent on top-level GETs from external sites
+      // — important for shared links).
+      document.cookie = `NEXT_LOCALE=${target}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
       router.prefetch(target === "en" ? "/" : `/${target}`);
       dispatchLocaleTransition(target);
     },
