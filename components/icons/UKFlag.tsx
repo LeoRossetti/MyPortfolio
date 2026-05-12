@@ -1,9 +1,12 @@
 type Props = React.SVGProps<SVGSVGElement>;
 
 /**
- * Simplified Union Jack. The centered diagonals are an approximation
- * (the official flag has counterchanged offsets) — close enough for both
- * the full-viewport wipe and the small toggle.
+ * Union Jack — accurate SVG sourced from flagcdn.com (public domain).
+ * Source: https://flagcdn.com/gb.svg
+ *
+ * Uses a clip-path to produce the correct counterchanged offset diagonals
+ * (St. Patrick's saltire is offset against St. Andrew's), rather than the
+ * naïve centered approximation.
  */
 export function UKFlag(props: Props) {
   return (
@@ -15,19 +18,35 @@ export function UKFlag(props: Props) {
       aria-label="Union Jack flag"
       {...props}
     >
-      <clipPath id="uk-clip">
-        <rect width="60" height="30" />
+      <clipPath id="uk-a">
+        <path d="M0 0v30h60V0z" />
       </clipPath>
-      <g clipPath="url(#uk-clip)">
-        <rect width="60" height="30" fill="#012169" />
-        {/* White diagonal saltires */}
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#FFFFFF" strokeWidth="6" />
-        {/* Red diagonal stripes (St. Patrick) — centered approximation */}
-        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" strokeWidth="2" />
-        {/* White cross frame (St. George) */}
-        <path d="M30,0 V30 M0,15 H60" stroke="#FFFFFF" strokeWidth="10" />
-        {/* Red cross (St. George) */}
-        <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" strokeWidth="6" />
+      <clipPath id="uk-b">
+        <path d="M30 15h30v15zv15H0zH0V0zV0h30z" />
+      </clipPath>
+      <g clipPath="url(#uk-a)">
+        <path d="M0 0v30h60V0z" fill="#012169" />
+        <path
+          d="m0 0 60 30m0-30L0 30"
+          stroke="#fff"
+          strokeWidth="6"
+        />
+        <path
+          d="m0 0 60 30m0-30L0 30"
+          clipPath="url(#uk-b)"
+          stroke="#C8102E"
+          strokeWidth="4"
+        />
+        <path
+          d="M30 0v30M0 15h60"
+          stroke="#fff"
+          strokeWidth="10"
+        />
+        <path
+          d="M30 0v30M0 15h60"
+          stroke="#C8102E"
+          strokeWidth="6"
+        />
       </g>
     </svg>
   );
