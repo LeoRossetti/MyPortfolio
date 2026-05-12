@@ -1,124 +1,182 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { motion, AnimatePresence } from "motion/react";
 import {
   useLocaleTransitionListener,
   type StartTransitionDetail,
 } from "@/lib/hooks/use-locale-transition";
 import type { Locale } from "@/lib/i18n/config";
-import { BrazilFlag } from "@/components/icons/BrazilFlag";
-import { UKFlag } from "@/components/icons/UKFlag";
 
 type Phase = "idle" | "running";
 
-const TIMING = {
-  enter: 0.3,
-  hold: 0.1,
-  exit: 0.3,
-} as const;
+const NUM_BARS = 6;
 
-const EASING = [0.65, 0, 0.35, 1] as const;
+const COLORS: Record<Locale, [string, string]> = {
+  pt: ["#009C3B", "#FFDF00"], // green, yellow alternating
+  en: ["#012169", "#C8102E"], // UK blue, UK red alternating
+};
+
+const TIMING = {
+  barDuration: 0.22, // each bar's tween length (seconds)
+  stagger: 0.018, // delay between bars (seconds)
+  hold: 0.08, // pause at full cover (seconds)
+} as const;
 
 export function LocaleTransition() {
   const router = useRouter();
-  const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
   const [target, setTarget] = useState<Locale | null>(null);
+  const [reducedMotion, setReducedMotion] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+
+  // Subscribe to changes in the reduced-motion preference
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
 
   const start = useCallback(
-    ({ target }: StartTransitionDetail) => {
+    ({ target: newTarget }: StartTransitionDetail) => {
       if (phase !== "idle") return;
-      setTarget(target);
+      setTarget(newTarget);
       setPhase("running");
-
-      const destination = target === "en" ? "/" : `/${target}`;
-      const pushAt = (TIMING.enter + TIMING.hold / 2) * 1000;
-      window.setTimeout(() => {
-        router.push(destination);
-      }, pushAt);
-
-      const totalMs = (TIMING.enter + TIMING.hold + TIMING.exit) * 1000;
-      window.setTimeout(() => {
-        setPhase("idle");
-        setTarget(null);
-      }, totalMs);
     },
-    [phase, router],
+    [phase],
   );
-
   useLocaleTransitionListener(start);
 
-  const isToPt = target === "pt";
-  // EN -> PT: enter from left, exit to right.
-  // PT -> EN: enter from right, exit to left.
-  const enterFrom = isToPt ? "-100%" : "100%";
-  const exitTo = isToPt ? "100%" : "-100%";
+  // Reduced-motion path: 200ms solid cross-fade, no GSAP
+  useEffect(() => {
+    if (!reducedMotion || phase !== "running" || !target) return;
+    const destination = target === "en" ? "/" : `/${target}`;
+    const pushTimer = window.setTimeout(() => router.push(destination), 100);
+    const endTimer = window.setTimeout(() => {
+      setPhase("idle");
+      setTarget(null);
+    }, 200);
+    return () => {
+      window.clearTimeout(pushTimer);
+      window.clearTimeout(endTimer);
+    };
+  }, [reducedMotion, phase, target, router]);
 
-  const Flag = isToPt ? BrazilFlag : UKFlag;
+  // GSAP path: stagger bars enter -> hold -> stagger exit
+  const barsRef = useRef<HTMLDivElement[]>([]);
+  useGSAP(
+    () => {
+      if (reducedMotion || phase !== "running" || !target) return;
+      const bars = barsRef.current.filter((b): b is HTMLDivElement =>
+        Boolean(b),
+      );
+      if (bars.length !== NUM_BARS) return;
 
-  const flagStyles: React.CSSProperties = {
-    position: "absolute",
-    inset: 0,
-    width: "100%",
-    height: "100%",
-  };
+      const destination = target === "en" ? "/" : `/${target}`;
 
-  if (reducedMotion && phase === "running") {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setPhase("idle");
+          setTarget(null);
+        },
+      });
+
+      // Start above the viewport
+      gsap.set(bars, { yPercent: -100 });
+
+      // Enter: stagger down to full cover
+      tl.to(bars, {
+        yPercent: 0,
+        duration: TIMING.barDuration,
+        ease: "power3.out",
+        stagger: TIMING.stagger,
+      });
+
+      // Hold: empty tween to consume time so the timeline holds full cover
+      tl.to({}, { duration: TIMING.hold });
+
+      // Fire router.push at midpoint of the hold (absolute timeline position)
+      const pushAt =
+        TIMING.barDuration +
+        (NUM_BARS - 1) * TIMING.stagger +
+        TIMING.hold / 2;
+      tl.call(() => router.push(destination), undefined, pushAt);
+
+      // Exit: continue staggering down off-screen
+      tl.to(bars, {
+        yPercent: 100,
+        duration: TIMING.barDuration,
+        ease: "power3.in",
+        stagger: TIMING.stagger,
+      });
+
+      return () => {
+        tl.kill();
+      };
+    },
+    { dependencies: [phase, target, reducedMotion, router] },
+  );
+
+  if (phase !== "running" || !target) return null;
+
+  // Reduced-motion render path (Motion cross-fade)
+  if (reducedMotion) {
+    const dominantColor = target === "pt" ? COLORS.pt[0] : COLORS.en[0];
     return (
       <AnimatePresence>
-        {phase === "running" && (
-          <motion.div
-            key="cross-fade"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              position: "fixed",
-              inset: 0,
-              zIndex: 100,
-              overflow: "hidden",
-            }}
-          >
-            <Flag style={flagStyles} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  }
-
-  return (
-    <AnimatePresence>
-      {phase === "running" && (
         <motion.div
-          key="curtain"
-          aria-hidden
-          initial={{ x: enterFrom }}
-          animate={{
-            x: ["0%", "0%", exitTo],
-            transition: {
-              times: [
-                TIMING.enter / (TIMING.enter + TIMING.hold + TIMING.exit),
-                (TIMING.enter + TIMING.hold) /
-                  (TIMING.enter + TIMING.hold + TIMING.exit),
-                1,
-              ],
-              duration: TIMING.enter + TIMING.hold + TIMING.exit,
-              ease: EASING,
-            },
-          }}
+          key="cross-fade"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 100,
-            overflow: "hidden",
+            background: dominantColor,
+            pointerEvents: "none",
           }}
-        >
-          <Flag style={flagStyles} />
-        </motion.div>
-      )}
-    </AnimatePresence>
+          aria-hidden
+        />
+      </AnimatePresence>
+    );
+  }
+
+  // GSAP render path: 6 vertical bars in a flex row
+  const colors = COLORS[target];
+  return (
+    <div
+      aria-hidden
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 100,
+        display: "flex",
+        overflow: "hidden",
+        pointerEvents: "none",
+      }}
+    >
+      {Array.from({ length: NUM_BARS }).map((_, i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            if (el) barsRef.current[i] = el;
+          }}
+          style={{
+            flex: 1,
+            height: "100%",
+            backgroundColor: colors[i % colors.length],
+            willChange: "transform",
+          }}
+        />
+      ))}
+    </div>
   );
 }
