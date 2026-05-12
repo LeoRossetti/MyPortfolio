@@ -117,11 +117,7 @@ function DesktopNavbar() {
               </li>
             ))}
           </ul>
-          <LocaleToggle
-            ariaLabel={dict.locale.ariaLabel}
-            enLabel={dict.locale.en}
-            ptLabel={dict.locale.pt}
-          />
+          <LocaleToggle ariaLabel={dict.locale.ariaLabel} />
         </div>
       </div>
     </motion.header>
@@ -168,14 +164,7 @@ function MobileStaggeredNav() {
         </span>
       }
       onItemClick={handleItemClick}
-      headerExtras={
-        <LocaleToggle
-          ariaLabel={dict.locale.ariaLabel}
-          enLabel={dict.locale.en}
-          ptLabel={dict.locale.pt}
-          size="lg"
-        />
-      }
+      headerExtras={<LocaleToggle ariaLabel={dict.locale.ariaLabel} />}
     />
   );
 }
