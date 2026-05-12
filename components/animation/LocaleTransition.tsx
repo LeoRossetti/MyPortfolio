@@ -21,9 +21,13 @@ const COLORS: Record<Locale, [string, string, string]> = {
 };
 
 const TIMING = {
-  barDuration: 0.22, // each bar's tween length (seconds)
-  stagger: 0.018, // delay between bars (seconds)
-  hold: 0.08, // pause at full cover (seconds)
+  enterDuration: 0.22, // each bar's tween length on the way in
+  enterStagger: 0.018, // delay between bars on the way in
+  enterEase: "power3.out", // punchy entry — bars land with deceleration
+  hold: 0.1, // pause at full cover (seconds)
+  exitDuration: 0.42, // longer exit for a more cinematic feel
+  exitStagger: 0.028, // more pronounced stagger on the way out
+  exitEase: "power2.inOut", // smooth glide off — no late-stage whip
 } as const;
 
 export function LocaleTransition() {
@@ -93,9 +97,9 @@ export function LocaleTransition() {
       // Enter: stagger down to full cover
       tl.to(bars, {
         yPercent: 0,
-        duration: TIMING.barDuration,
-        ease: "power3.out",
-        stagger: TIMING.stagger,
+        duration: TIMING.enterDuration,
+        ease: TIMING.enterEase,
+        stagger: TIMING.enterStagger,
       });
 
       // Hold: empty tween to consume time so the timeline holds full cover
@@ -103,17 +107,17 @@ export function LocaleTransition() {
 
       // Fire router.push at midpoint of the hold (absolute timeline position)
       const pushAt =
-        TIMING.barDuration +
-        (NUM_BARS - 1) * TIMING.stagger +
+        TIMING.enterDuration +
+        (NUM_BARS - 1) * TIMING.enterStagger +
         TIMING.hold / 2;
       tl.call(() => router.push(destination), undefined, pushAt);
 
-      // Exit: continue staggering down off-screen
+      // Exit: continue staggering down off-screen with a longer, smoother glide
       tl.to(bars, {
         yPercent: 100,
-        duration: TIMING.barDuration,
-        ease: "power3.in",
-        stagger: TIMING.stagger,
+        duration: TIMING.exitDuration,
+        ease: TIMING.exitEase,
+        stagger: TIMING.exitStagger,
       });
 
       return () => {
