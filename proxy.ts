@@ -12,8 +12,10 @@ const PUBLIC_FILE = /\.(.*)$/;
  * - Static files and Next internals (_next, api, public-file extensions) bypass.
  * - Sets `x-locale` request header so the root layout can render <html lang>
  *   server-side without a flash.
- *
- * Cookie-based redirect is wired in Phase 3 (Task 16).
+ * - Cookie-based redirect: on bare "/", if `NEXT_LOCALE` is a valid non-default
+ *   locale (e.g. `pt`), 307-redirect to that locale's prefix so return visits
+ *   land in the user's chosen language. Deep links (e.g. `/pt`, `/anything`)
+ *   bypass cookie logic — explicit URLs always win.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -29,16 +31,28 @@ export function proxy(request: NextRequest) {
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
 
-  // Already locale-prefixed (e.g. /pt, /pt/whatever) — forward x-locale so
-  // the root layout sees it.
+  // Already locale-prefixed (e.g. /pt) — forward x-locale and continue.
   if (first && isLocale(first)) {
     const headers = new Headers(request.headers);
     headers.set("x-locale", first);
     return NextResponse.next({ request: { headers } });
   }
 
-  // No locale prefix — rewrite internally to defaultLocale and set header.
-  // E.g. "/" -> "/en", "/anything" -> "/en/anything".
+  // Cookie-based redirect: only on root "/" — deep links are sticky.
+  if (pathname === "/") {
+    const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+    if (
+      cookieLocale &&
+      isLocale(cookieLocale) &&
+      cookieLocale !== defaultLocale
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${cookieLocale}`;
+      return NextResponse.redirect(url, 307);
+    }
+  }
+
+  // No locale prefix and no relevant cookie — rewrite internally to default.
   const url = request.nextUrl.clone();
   url.pathname = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
   const headers = new Headers(request.headers);
