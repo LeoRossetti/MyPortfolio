@@ -2,162 +2,162 @@ import type { Dictionary } from "../types";
 
 const pt: Dictionary = {
   meta: {
-    title: "Leo Rossetti — Full-stack Developer",
+    title: "Leo Rossetti — Desenvolvedor Full-stack",
     titleTemplate: "%s · Leo Rossetti",
     description:
-      "Full-stack developer. Ships products, not prototypes. TypeScript, React, Next.js, React Native, Node.js, Python, C#.",
-    ogTitle: "Leo Rossetti — Full-stack Developer",
-    ogDescription: "Full-stack developer. Ships products, not prototypes.",
+      "Desenvolvedor full-stack. Entrega produtos, não protótipos. TypeScript, React, Next.js, React Native, Node.js, Python, C#.",
+    ogTitle: "Leo Rossetti — Desenvolvedor Full-stack",
+    ogDescription: "Desenvolvedor full-stack. Entrega produtos, não protótipos.",
   },
   locale: {
-    ariaLabel: "Language",
+    ariaLabel: "Idioma",
     en: "EN",
     pt: "PT",
   },
   nav: {
     portfolio: "portfolio",
-    home: "Home",
-    about: "About",
-    work: "Work",
-    projects: "Projects",
-    experience: "Experience",
-    contact: "Contact",
-    goTo: "Go to",
+    home: "Início",
+    about: "Sobre",
+    work: "Trabalho",
+    projects: "Projetos",
+    experience: "Experiência",
+    contact: "Contato",
+    goTo: "Ir para",
   },
   hero: {
-    eyebrow: "Full-stack developer",
+    eyebrow: "Desenvolvedor full-stack",
     name: "Leo Rossetti",
-    taglineLead: "Full-stack developer.",
-    tagline: "Ships products, not prototypes.",
-    scrollHint: "scroll ↓",
+    taglineLead: "Desenvolvedor full-stack.",
+    tagline: "Entrega produtos, não protótipos.",
+    scrollHint: "rolar ↓",
     cta: {
-      primary: "View work",
-      secondary: "Get in touch",
+      primary: "Ver projetos",
+      secondary: "Entrar em contato",
     },
     terminal: {
       whoami: "whoami",
       whoamiOutput: "leo.rossetti --role=fullstack --location=remote",
       stackList: "stack --list",
       stackOutput: "[typescript, react, next.js, react-native, node, python, c#]",
-      current: "current",
-      currentOutput: "shipping next.js + react native",
+      current: "atual",
+      currentOutput: "trabalhando com next.js + react native",
     },
   },
   stackStrip: {
-    ariaLabel: "Technology stack",
+    ariaLabel: "Stack de tecnologia",
   },
   about: {
-    eyebrow: "// about",
-    heading: "Hi, I'm Leo.",
-    paragraphLeadFrom: "A full-stack developer from",
-    paragraphCountry: "Brazil",
+    eyebrow: "// sobre",
+    heading: "Olá, eu sou o Leo.",
+    paragraphLeadFrom: "Desenvolvedor full-stack do",
+    paragraphCountry: "Brasil",
     paragraphTail:
-      ", three years into the craft. I like shipping whole products end-to-end — the data model, the backend, the UI, the polish — not just prototypes.",
-    status: "Remote · always shipping",
+      ", há três anos no ofício. Gosto de entregar produtos completos do início ao fim — modelo de dados, backend, UI, polimento — não só protótipos.",
+    status: "Remoto · sempre entregando",
   },
   services: {
-    eyebrow: "// work",
-    headingLead: "What I",
-    headingAccent: "work on",
+    eyebrow: "// trabalho",
+    headingLead: "No que eu",
+    headingAccent: "trabalho",
     subheading:
-      "A few overlapping lanes — most of my projects blend web, mobile, and a little design engineering.",
+      "Algumas frentes que se sobrepõem — a maioria dos meus projetos mistura web, mobile e um pouco de design engineering.",
     items: {
       "full-stack-web": {
-        title: "Full-Stack Web",
+        title: "Web Full-Stack",
         pitch:
-          "Next.js apps with real backends, auth, and deploy pipelines. Where most of my time goes.",
+          "Apps em Next.js com backend de verdade, autenticação e pipelines de deploy. É onde passo a maior parte do tempo.",
       },
       mobile: {
         title: "Mobile",
         pitch:
-          "Cross-platform iOS/Android with the same JS/TS that powers the web side.",
+          "iOS/Android multiplataforma com o mesmo JS/TS que move o lado web.",
       },
       backend: {
         title: "API & Backend",
         pitch:
-          "Typed APIs, background jobs, and integrations. Meet the data where it lives — Node, Python, or .NET.",
+          "APIs tipadas, jobs em segundo plano e integrações. Encontro os dados onde eles vivem — Node, Python ou .NET.",
       },
       "design-engineering": {
         title: "Design Engineering",
         pitch:
-          "Motion-rich interfaces with Motion and GSAP. Interfaces that feel, not just look.",
+          "Interfaces ricas em motion com Motion e GSAP. Interfaces que sentem, não só aparentam.",
       },
     },
   },
   projects: {
-    eyebrow: "// projects",
-    headingLead: "Shipped",
-    headingAccent: "& shipping",
+    eyebrow: "// projetos",
+    headingLead: "Entregues",
+    headingAccent: "& em andamento",
     subheading:
-      "A small slice for now — more to come. Each tile links to source or a live demo when there is one.",
+      "Uma pequena amostra por enquanto — mais por vir. Cada bloco leva ao código ou a uma demo quando há.",
     statusLabels: {
-      "in-progress": "In progress",
-      "coming-soon": "Coming soon",
+      "in-progress": "Em andamento",
+      "coming-soon": "Em breve",
     },
     linkLabels: {
       github: "GitHub",
       demo: "Demo",
-      external: "External",
+      external: "Externo",
     },
     items: {
       "yt-timestamp-saver": {
         title: "YouTube Timestamp Saver",
         description:
-          "A browser extension that lets you save and organise timestamps inside YouTube videos. Cross-device sync, keyboard shortcuts, and quick-jump navigation.",
+          "Uma extensão de navegador para salvar e organizar timestamps dentro de vídeos do YouTube. Sincronização entre dispositivos, atalhos de teclado e navegação rápida.",
       },
       "next-1": {
-        title: "In the works",
-        description: "Next project — details soon.",
+        title: "Em desenvolvimento",
+        description: "Próximo projeto — detalhes em breve.",
       },
       "next-2": {
-        title: "In the works",
-        description: "Next project — details soon.",
+        title: "Em desenvolvimento",
+        description: "Próximo projeto — detalhes em breve.",
       },
       "next-3": {
-        title: "In the works",
-        description: "Next project — details soon.",
+        title: "Em desenvolvimento",
+        description: "Próximo projeto — detalhes em breve.",
       },
     },
   },
   experience: {
-    eyebrow: "// experience",
-    headingLead: "Currently at",
-    presentLabel: "Present",
+    eyebrow: "// experiência",
+    headingLead: "Atualmente na",
+    presentLabel: "Atual",
     items: {
       dealfuel: {
-        role: "Full-Stack Developer",
-        location: "Remote",
+        role: "Desenvolvedor Full-Stack",
+        location: "Remoto",
         summary:
-          "Building and shipping production web + mobile features across the DealFuel product stack.",
+          "Construindo e entregando funcionalidades web + mobile em produção dentro do stack da DealFuel.",
         highlights: [
-          "Owning features end-to-end across Next.js and React Native.",
-          "Shipping TypeScript — frontend, backend, and the integrations that glue them together.",
-          "Partnering with design to keep the UI consistent across platforms.",
+          "Dono de funcionalidades de ponta a ponta entre Next.js e React Native.",
+          "Entregando TypeScript — frontend, backend e as integrações que conectam tudo.",
+          "Trabalhando junto com design para manter a UI consistente entre plataformas.",
         ],
       },
     },
   },
   contact: {
-    eyebrow: "// contact",
-    headingLead: "Say",
-    headingAccent: "hi.",
+    eyebrow: "// contato",
+    headingLead: "Manda",
+    headingAccent: "um oi.",
     paragraph:
-      "Questions, collaborations, or just want to chat about a stack? Any of these lands straight with me — I usually reply within a day.",
+      "Dúvidas, colaborações ou só quer trocar ideia sobre stack? Qualquer um destes chega direto em mim — costumo responder em até um dia.",
     channels: {
       linkedin: "LinkedIn",
       github: "GitHub",
       email: "Email",
     },
     copy: {
-      action: "Copy email to clipboard",
-      copied: "Email copied",
-      toastSuccess: "Email copied to clipboard",
-      toastError: "Couldn't copy — select and copy manually",
+      action: "Copiar email para a área de transferência",
+      copied: "Email copiado",
+      toastSuccess: "Email copiado para a área de transferência",
+      toastError: "Não foi possível copiar — selecione e copie manualmente",
     },
   },
   footer: {
-    ariaLabel: "Footer",
-    rights: "All rights reserved",
+    ariaLabel: "Rodapé",
+    rights: "Todos os direitos reservados",
     socials: {
       linkedin: "LinkedIn",
       github: "GitHub",
@@ -166,7 +166,7 @@ const pt: Dictionary = {
   },
   terminal: {
     title: "leo@portfolio  ~  zsh",
-    ariaLabel: "Terminal showcase",
+    ariaLabel: "Demonstração do terminal",
   },
 } as const;
 
