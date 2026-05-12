@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { dispatchLocaleTransition } from "@/lib/hooks/use-locale-transition";
@@ -19,7 +19,6 @@ type Props = {
 export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props) {
   const current = useCurrentLocale();
   const router = useRouter();
-  const [hovered, setHovered] = useState(false);
 
   const destination: Locale = current === "en" ? "pt" : "en";
 
@@ -29,11 +28,8 @@ export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props
     dispatchLocaleTransition(destination);
   }, [destination, router]);
 
-  // Visual state: idle shows current locale; hover shows destination preview.
-  const showingDestination = hovered;
-  const shownLocale = showingDestination ? destination : current;
-  const ShownFlag = shownLocale === "pt" ? BrazilFlag : UKFlag;
-  const shownLabel = shownLocale === "pt" ? ptLabel : enLabel;
+  const CurrentFlag = current === "pt" ? BrazilFlag : UKFlag;
+  const currentLabel = current === "pt" ? ptLabel : enLabel;
 
   const dimensions =
     size === "lg"
@@ -44,13 +40,9 @@ export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props
     <button
       type="button"
       onClick={switchTo}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-      aria-label={`${ariaLabel}: ${current === "en" ? enLabel : ptLabel} (current)`}
+      aria-label={`${ariaLabel}: ${currentLabel}`}
       className={cn(
-        "group inline-flex items-center rounded-full border border-border-subtle bg-bg-elevated/40 backdrop-blur transition-colors hover:border-border-strong",
+        "inline-flex items-center rounded-full border border-border-subtle bg-bg-elevated/40 backdrop-blur transition-colors hover:border-border-strong",
         dimensions.height,
         dimensions.px,
         dimensions.gap,
@@ -58,33 +50,21 @@ export function LocaleToggle({ ariaLabel, enLabel, ptLabel, size = "sm" }: Props
     >
       <span
         className={cn(
-          "inline-flex overflow-hidden rounded-sm ring-1 ring-black/20 transition-transform duration-200",
+          "inline-flex overflow-hidden rounded-sm ring-1 ring-black/20",
           dimensions.flag,
-          showingDestination && "scale-105",
         )}
         aria-hidden
       >
-        <ShownFlag className="h-full w-full" />
+        <CurrentFlag className="h-full w-full" />
       </span>
       <span
         className={cn(
-          "font-mono uppercase tracking-[0.18em] text-fg-primary transition-colors",
+          "font-mono uppercase tracking-[0.18em] text-fg-primary",
           dimensions.text,
         )}
       >
-        {shownLabel}
+        {currentLabel}
       </span>
-      {showingDestination && (
-        <span
-          aria-hidden
-          className={cn(
-            "ml-0.5 text-fg-dim transition-opacity",
-            dimensions.text,
-          )}
-        >
-          →
-        </span>
-      )}
     </button>
   );
 }
