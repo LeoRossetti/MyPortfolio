@@ -8,13 +8,15 @@ import {
   type StartTransitionDetail,
 } from "@/lib/hooks/use-locale-transition";
 import type { Locale } from "@/lib/i18n/config";
+import { BrazilFlag } from "@/components/icons/BrazilFlag";
+import { UKFlag } from "@/components/icons/UKFlag";
 
 type Phase = "idle" | "running";
 
 const TIMING = {
-  enter: 0.3, // 300ms
-  hold: 0.1, // 100ms
-  exit: 0.3, // 300ms
+  enter: 0.3,
+  hold: 0.1,
+  exit: 0.3,
 } as const;
 
 const EASING = [0.65, 0, 0.35, 1] as const;
@@ -32,9 +34,6 @@ export function LocaleTransition() {
       setPhase("running");
 
       const destination = target === "en" ? "/" : `/${target}`;
-
-      // router.push fires at the "hold" midpoint so the new page is mounted
-      // under the curtain. enter (300ms) -> push at 350ms (mid-hold) -> exit (300ms).
       const pushAt = (TIMING.enter + TIMING.hold / 2) * 1000;
       window.setTimeout(() => {
         router.push(destination);
@@ -51,14 +50,20 @@ export function LocaleTransition() {
 
   useLocaleTransitionListener(start);
 
-  // EN -> PT: white panel, enter from left (-100%), exit to right (+100%), text "PT" black
-  // PT -> EN: black panel, enter from right (+100%), exit to left (-100%), text "EN" white
   const isToPt = target === "pt";
-  const panelBg = isToPt ? "#ffffff" : "#000000";
-  const textColor = isToPt ? "#000000" : "#ffffff";
-  const code = isToPt ? "PT" : "EN";
+  // EN -> PT: enter from left, exit to right.
+  // PT -> EN: enter from right, exit to left.
   const enterFrom = isToPt ? "-100%" : "100%";
   const exitTo = isToPt ? "100%" : "-100%";
+
+  const Flag = isToPt ? BrazilFlag : UKFlag;
+
+  const flagStyles: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+  };
 
   if (reducedMotion && phase === "running") {
     return (
@@ -74,9 +79,11 @@ export function LocaleTransition() {
               position: "fixed",
               inset: 0,
               zIndex: 100,
-              background: panelBg,
+              overflow: "hidden",
             }}
-          />
+          >
+            <Flag style={flagStyles} />
+          </motion.div>
         )}
       </AnimatePresence>
     );
@@ -106,30 +113,10 @@ export function LocaleTransition() {
             position: "fixed",
             inset: 0,
             zIndex: 100,
-            background: panelBg,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: textColor,
-            fontFamily: "var(--font-geist-mono)",
-            fontSize: "clamp(4rem, 12vw, 10rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.02em",
+            overflow: "hidden",
           }}
         >
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: [0, 1, 1, 0],
-              transition: {
-                times: [0, 0.4, 0.7, 1],
-                duration: TIMING.enter + TIMING.hold + TIMING.exit,
-                ease: "linear",
-              },
-            }}
-          >
-            {code}
-          </motion.span>
+          <Flag style={flagStyles} />
         </motion.div>
       )}
     </AnimatePresence>
