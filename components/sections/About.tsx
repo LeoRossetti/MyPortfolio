@@ -56,9 +56,11 @@ export function About() {
           variants={fadeUp}
           className="text-fg-muted mt-8 text-base leading-relaxed sm:text-lg"
         >
-          {dict.about.paragraphLeadFrom}{" "}
-          <span className="text-fg-primary">{dict.about.paragraphCountry}</span>
-          {dict.about.paragraphTail}
+          <Scramble>{dict.about.paragraphLeadFrom}</Scramble>{" "}
+          <Scramble as="span" className="text-fg-primary">
+            {dict.about.paragraphCountry}
+          </Scramble>
+          <Scramble>{dict.about.paragraphTail}</Scramble>
         </motion.p>
 
         <motion.p

@@ -3,6 +3,7 @@
 import { Lock } from "lucide-react";
 import { motion, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
+import { Scramble } from "@/components/animation/Scramble";
 
 type Props = {
   /** Localised copy for this project (title + description). */
@@ -54,14 +55,14 @@ export function PlaceholderProjectCard({
             className="size-1.5 animate-pulse rounded-full bg-[var(--accent-warn)] shadow-[0_0_8px_var(--accent-warn)]"
           />
           <span className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase">
-            {statusLabel}
+            <Scramble>{statusLabel}</Scramble>
           </span>
         </div>
         <h3 className="font-display text-fg-primary/80 mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-          {copy.title}
+          <Scramble>{copy.title}</Scramble>
         </h3>
         <p className="text-fg-muted mt-3 text-sm leading-relaxed sm:text-[15px]">
-          {copy.description}
+          <Scramble>{copy.description}</Scramble>
         </p>
 
         <div className="mt-auto pt-5">

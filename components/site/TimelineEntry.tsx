@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { ExperienceEntry } from "@/lib/data/experience";
 import { fadeUp, staggerChildren } from "@/lib/motion";
 import { TechChip } from "@/components/site/TechChip";
+import { Scramble } from "@/components/animation/Scramble";
 
 type Props = {
   entry: ExperienceEntry;
@@ -53,7 +54,7 @@ export function TimelineEntry({
         className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2"
       >
         <h3 className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl">
-          {role} <span className="text-fg-muted">@ </span>
+          <Scramble>{role}</Scramble> <span className="text-fg-muted">@ </span>
           {url ? (
             <a
               href={url}
@@ -84,7 +85,7 @@ export function TimelineEntry({
                 className="bg-accent-primary size-1.5 animate-pulse rounded-full shadow-[0_0_8px_var(--accent-primary)]"
               />
             )}
-            {end === "Present" ? presentLabel : end}
+            {end === "Present" ? <Scramble>{presentLabel}</Scramble> : end}
           </span>
         </div>
       </motion.div>
@@ -94,7 +95,7 @@ export function TimelineEntry({
           variants={fadeUp}
           className="text-fg-dim mt-1 font-mono text-xs tracking-wide uppercase"
         >
-          {location}
+          <Scramble>{location}</Scramble>
         </motion.p>
       )}
 
@@ -102,7 +103,7 @@ export function TimelineEntry({
         variants={fadeUp}
         className="text-fg-muted mt-4 max-w-2xl text-[15px] leading-relaxed"
       >
-        {summary}
+        <Scramble>{summary}</Scramble>
       </motion.p>
 
       <motion.ul variants={staggerChildren(0.08)} className="mt-5 space-y-2">
@@ -116,7 +117,7 @@ export function TimelineEntry({
               aria-hidden
               className="bg-accent-deep absolute top-[9px] left-0 size-1.5 rounded-full"
             />
-            {h}
+            <Scramble>{h}</Scramble>
           </motion.li>
         ))}
       </motion.ul>

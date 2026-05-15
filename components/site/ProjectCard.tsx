@@ -7,6 +7,7 @@ import { GlareHover } from "@/components/reactbits/GlareHover";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/lib/data/projects";
 import { TechChip } from "@/components/site/TechChip";
+import { Scramble } from "@/components/animation/Scramble";
 
 type Props = {
   project: Project;
@@ -64,7 +65,7 @@ export function ProjectCard({
       <div className="flex flex-1 flex-col">
         <div className="flex items-start justify-between gap-4">
           <h3 className="font-display text-fg-primary text-xl font-semibold tracking-tight sm:text-2xl">
-            {title}
+            <Scramble>{title}</Scramble>
           </h3>
           <span className="text-fg-dim group-hover:text-accent-primary inline-flex size-8 shrink-0 items-center justify-center rounded-full transition-colors">
             <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -72,7 +73,7 @@ export function ProjectCard({
         </div>
 
         <p className="text-fg-muted mt-3 text-sm leading-relaxed sm:text-[15px]">
-          {description}
+          <Scramble>{description}</Scramble>
         </p>
 
         <div className="mt-auto pt-5">
@@ -94,7 +95,7 @@ export function ProjectCard({
                   ) : (
                     <ExternalLink className="size-3.5" />
                   )}
-                  {linkLabels[link.labelKey]}
+                  <Scramble>{linkLabels[link.labelKey]}</Scramble>
                 </span>
               ))}
             </div>

@@ -141,7 +141,7 @@ export function Contact() {
             </div>
             <div>
               <p className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase">
-                {label}
+                <Scramble>{label}</Scramble>
               </p>
               <p className="text-fg-primary mt-2 font-mono text-sm break-all sm:text-base">
                 {handle}

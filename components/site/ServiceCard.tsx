@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import type { Service } from "@/lib/data/services";
 import { usePrefersReducedMotion } from "@/lib/hooks/usePrefersReducedMotion";
 import { TechChip } from "@/components/site/TechChip";
+import { Scramble } from "@/components/animation/Scramble";
 
 type Props = {
   service: Service;
@@ -86,10 +87,10 @@ export function ServiceCard({ service, copy, className }: Props) {
           <Icon className="text-accent-primary size-5" strokeWidth={1.6} />
         </div>
         <h3 className="font-display text-fg-primary mt-6 text-xl font-semibold tracking-tight sm:text-2xl">
-          {title}
+          <Scramble>{title}</Scramble>
         </h3>
         <p className="text-fg-muted mt-3 max-w-md text-sm leading-relaxed sm:text-[15px]">
-          {pitch}
+          <Scramble>{pitch}</Scramble>
         </p>
       </div>
 
