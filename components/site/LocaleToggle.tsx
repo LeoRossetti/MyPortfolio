@@ -18,7 +18,6 @@ export function LocaleToggle({ ariaLabel }: Props) {
   const switchTo = useCallback(
     (target: Locale) => {
       if (target === current) return;
-      document.cookie = `NEXT_LOCALE=${target}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
       // Fire scramble first so listeners start their animation immediately
       // off the click; the dictionary swap follows in the same tick. The
       // <Scramble> components read the latest target on every rAF tick, so
