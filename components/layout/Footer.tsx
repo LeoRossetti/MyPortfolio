@@ -3,6 +3,7 @@
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { navSections, siteConfig } from "@/lib/data/nav";
+import { Scramble } from "@/components/animation/Scramble";
 import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 /**
@@ -32,7 +33,7 @@ export function Footer() {
               {siteConfig.name}
             </p>
             <p className="text-fg-dim mt-1 text-sm">
-              © {year} · {dict.footer.rights}
+              © {year} · <Scramble>{dict.footer.rights}</Scramble>
             </p>
           </div>
 
@@ -47,7 +48,7 @@ export function Footer() {
                 href={`#${section.id}`}
                 className="text-fg-muted hover:text-fg-primary text-sm transition-colors"
               >
-                {labelFor(section.id)}
+                <Scramble>{labelFor(section.id)}</Scramble>
               </a>
             ))}
           </nav>

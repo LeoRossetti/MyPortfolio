@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { TimelineEntry } from "@/components/site/TimelineEntry";
 import { experience } from "@/lib/data/experience";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import { Scramble } from "@/components/animation/Scramble";
 import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 export function Experience() {
@@ -24,13 +25,15 @@ export function Experience() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {dict.experience.eyebrow}
+          <Scramble>{dict.experience.eyebrow}</Scramble>
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">{dict.experience.headingLead} </span>
+          <Scramble as="span" className="text-fg-primary">
+            {dict.experience.headingLead}
+          </Scramble>{" "}
           <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
             DealFuel
           </span>

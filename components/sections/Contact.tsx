@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
 import { siteConfig } from "@/lib/data/nav";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import { Scramble } from "@/components/animation/Scramble";
 import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
@@ -81,22 +82,27 @@ export function Contact() {
           variants={fadeUp}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {dict.contact.eyebrow}
+          <Scramble>{dict.contact.eyebrow}</Scramble>
         </motion.p>
         <motion.h2
           variants={fadeUp}
           className="font-display text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          <span className="text-fg-primary">{dict.contact.headingLead} </span>
-          <span className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent">
+          <Scramble as="span" className="text-fg-primary">
+            {dict.contact.headingLead}
+          </Scramble>{" "}
+          <Scramble
+            as="span"
+            className="from-fg-primary bg-gradient-to-br via-[var(--accent-primary)] to-[var(--accent-deep)] bg-clip-text text-transparent"
+          >
             {dict.contact.headingAccent}
-          </span>
+          </Scramble>
         </motion.h2>
         <motion.p
           variants={fadeUp}
           className="text-fg-muted max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          {dict.contact.paragraph}
+          <Scramble>{dict.contact.paragraph}</Scramble>
         </motion.p>
       </motion.div>
 

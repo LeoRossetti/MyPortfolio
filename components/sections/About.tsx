@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { fadeUp, staggerChildren } from "@/lib/motion";
+import { Scramble } from "@/components/animation/Scramble";
 import { useDictionary } from "@/components/i18n/DictionaryProvider";
 
 /**
@@ -41,14 +42,14 @@ export function About() {
           style={{ y: eyebrowY }}
           className="text-fg-dim font-mono text-xs tracking-[0.2em] uppercase"
         >
-          {dict.about.eyebrow}
+          <Scramble>{dict.about.eyebrow}</Scramble>
         </motion.p>
 
         <motion.h2
           variants={fadeUp}
           className="text-fg-primary font-display mt-5 text-4xl leading-[1.05] font-semibold tracking-tight sm:text-5xl lg:text-6xl"
         >
-          {dict.about.heading}
+          <Scramble>{dict.about.heading}</Scramble>
         </motion.h2>
 
         <motion.p
@@ -64,7 +65,7 @@ export function About() {
           variants={fadeUp}
           className="text-fg-dim mt-5 font-mono text-sm tracking-wide"
         >
-          {dict.about.status}
+          <Scramble>{dict.about.status}</Scramble>
         </motion.p>
       </motion.div>
     </section>

@@ -9,6 +9,7 @@ import StaggeredMenu, {
   type StaggeredMenuItem,
 } from "@/components/reactbits/StaggeredMenu";
 import { LocaleToggle } from "@/components/site/LocaleToggle";
+import { Scramble } from "@/components/animation/Scramble";
 import { useDictionary } from "@/components/i18n/DictionaryProvider";
 import type { Dictionary } from "@/lib/i18n/types";
 
@@ -95,7 +96,8 @@ function DesktopNavbar() {
           onClick={handleNavClick("home")}
           className="text-fg-muted hover:text-fg-primary font-mono text-base tracking-wide transition-colors"
         >
-          <span className="text-fg-dim">{"// "}</span>{dict.nav.portfolio}
+          <span className="text-fg-dim">{"// "}</span>
+          <Scramble>{dict.nav.portfolio}</Scramble>
         </a>
 
         <div className="flex items-center gap-6">
@@ -112,7 +114,7 @@ function DesktopNavbar() {
                       : "text-fg-muted hover:text-fg-primary",
                   )}
                 >
-                  {labelFor(section.id).toLowerCase()}
+                  <Scramble>{labelFor(section.id).toLowerCase()}</Scramble>
                 </a>
               </li>
             ))}

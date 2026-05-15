@@ -8,7 +8,6 @@ import { SmoothScrollProvider } from "@/components/animation/SmoothScrollProvide
 import { TerminalBoot } from "@/components/animation/TerminalBoot";
 import { SiteBackdrop } from "@/components/layout/SiteBackdrop";
 import ClickSpark from "@/components/reactbits/ClickSpark";
-import { LocaleTransition } from "@/components/animation/LocaleTransition";
 import { defaultLocale, isLocale } from "@/lib/i18n/config";
 import "./globals.css";
 
@@ -42,7 +41,6 @@ export default async function RootLayout({
         </SmoothScrollProvider>
         <TerminalBoot />
         <ClickSpark />
-        <LocaleTransition />
         <Analytics />
         <SpeedInsights />
       </body>

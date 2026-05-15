@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 import { cn } from "@/lib/utils";
-import { dispatchLocaleTransition } from "@/lib/hooks/use-locale-transition";
+import { dispatchLocaleScramble } from "@/components/animation/Scramble";
 import { useLocaleSwitcher } from "@/components/i18n/DictionaryProvider";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -19,11 +19,14 @@ export function LocaleToggle({ ariaLabel }: Props) {
     (target: Locale) => {
       if (target === current) return;
       document.cookie = `NEXT_LOCALE=${target}; Path=/; Max-Age=${60 * 60 * 24 * 365}; SameSite=Lax`;
-      dispatchLocaleTransition(target, () => {
-        setLocale(target);
-        const newPath = target === "en" ? "/" : `/${target}`;
-        window.history.replaceState(null, "", newPath);
-      });
+      // Fire scramble first so listeners start their animation immediately
+      // off the click; the dictionary swap follows in the same tick. The
+      // <Scramble> components read the latest target on every rAF tick, so
+      // they naturally settle on the post-swap value.
+      dispatchLocaleScramble();
+      setLocale(target);
+      const newPath = target === "en" ? "/" : `/${target}`;
+      window.history.replaceState(null, "", newPath);
     },
     [current, setLocale],
   );

@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "motion/react";
 import TextType from "@/components/reactbits/TextType";
-import { useDictionary } from "@/components/i18n/DictionaryProvider";
+import { Scramble } from "@/components/animation/Scramble";
+import { useDictionary, useLocaleSwitcher } from "@/components/i18n/DictionaryProvider";
 import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
 // Heavy (three + custom shader + image texture). Keep it out of the initial
@@ -24,7 +25,21 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
   const dict = useDictionary();
+  const { locale } = useLocaleSwitcher();
   const heroRef = useRef<HTMLElement>(null);
+
+  // Bump on every locale change so TextType remounts and re-types the
+  // new name from scratch. First mount uses key=0 (so the long
+  // initialDelay below holds while TerminalBoot finishes); subsequent
+  // switches use key>=1 and skip that delay.
+  const [typeKey, setTypeKey] = useState(0);
+  const prevLocale = useRef(locale);
+  useEffect(() => {
+    if (prevLocale.current !== locale) {
+      prevLocale.current = locale;
+      setTypeKey((n) => n + 1);
+    }
+  }, [locale]);
   // Mobile gets a static cover-fit image instead of the GridDistortion
   // shader. Touch devices don't fire mousemove (so the effect is just a
   // static stretched image anyway), and skipping the WebGL context
@@ -105,11 +120,16 @@ export function Hero() {
         {/* Typed name — TextType from React Bits. initialDelay waits out the
             TerminalBoot overlay (~1.5s) so the typing plays AFTER the wipe
             instead of behind it. */}
+        {/* Keyed remount on locale change so TextType re-types the new
+            name from scratch instead of getting stuck at the previously
+            typed string. First mount keeps the original 1800ms delay so
+            the typing plays after TerminalBoot clears. */}
         <TextType
+          key={typeKey}
           as="h1"
           text={dict.hero.name}
           typingSpeed={75}
-          initialDelay={1800}
+          initialDelay={typeKey === 0 ? 1800 : 0}
           loop={false}
           showCursor
           hideCursorOnDone
@@ -124,8 +144,10 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.24, ease }}
           className="text-fg-muted mt-8 max-w-xl text-base leading-relaxed sm:text-lg"
         >
-          <span className="text-fg-primary">{dict.hero.taglineLead}</span>{" "}
-          {dict.hero.tagline}
+          <Scramble as="span" className="text-fg-primary">
+            {dict.hero.taglineLead}
+          </Scramble>{" "}
+          <Scramble>{dict.hero.tagline}</Scramble>
         </motion.p>
       </motion.div>
 
@@ -136,7 +158,7 @@ export function Hero() {
         transition={{ duration: 0.8, delay: 0.6, ease }}
         className="text-fg-dim pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[11px] tracking-[0.3em] uppercase"
       >
-        {dict.hero.scrollHint}
+        <Scramble>{dict.hero.scrollHint}</Scramble>
       </motion.div>
     </section>
   );
