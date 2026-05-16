@@ -100,6 +100,11 @@ const pt: Dictionary = {
       external: "Externo",
     },
     items: {
+      "dealfuel-mobile": {
+        title: "DealFuel Mobile",
+        description:
+          "App nativo iOS + Android da DealFuel. Expo + React Native compartilhando um backend Convex com o produto web — sync em tempo real, autenticação com Clerk, edição rich text, ordenação kanban arrastável e push notifications.",
+      },
       "yt-timestamp-saver": {
         title: "YouTube Timestamp Saver",
         description:
