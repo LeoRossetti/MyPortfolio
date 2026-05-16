@@ -17,15 +17,21 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    id: "dealfuel-mobile",
+    tech: ["TypeScript", "React Native", "Expo", "Convex", "Clerk"],
+    status: "live",
+    colSpan: "lg:col-span-6",
+  },
+  {
     id: "yt-timestamp-saver",
     tech: ["TypeScript", "React", "Chrome Extension API"],
     status: "live",
     links: [
       { labelKey: "github", href: "https://github.com/LeoRossetti", kind: "github" },
     ],
-    colSpan: "lg:col-span-8",
+    colSpan: "lg:col-span-6",
   },
   { id: "next-1", tech: ["TBA"], status: "in-progress", colSpan: "lg:col-span-4" },
-  { id: "next-2", tech: ["TBA"], status: "coming-soon", colSpan: "lg:col-span-6" },
-  { id: "next-3", tech: ["TBA"], status: "coming-soon", colSpan: "lg:col-span-6" },
+  { id: "next-2", tech: ["TBA"], status: "coming-soon", colSpan: "lg:col-span-4" },
+  { id: "next-3", tech: ["TBA"], status: "coming-soon", colSpan: "lg:col-span-4" },
 ];
