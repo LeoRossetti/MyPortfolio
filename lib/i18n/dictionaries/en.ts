@@ -98,6 +98,11 @@ const en = {
       external: "External",
     },
     items: {
+      "dealfuel-mobile": {
+        title: "DealFuel Mobile",
+        description:
+          "Native iOS + Android app for DealFuel. Expo + React Native sharing a Convex backend with the web product — real-time sync, Clerk auth, rich text editing, drag-and-drop kanban ordering, and push notifications.",
+      },
       "yt-timestamp-saver": {
         title: "YouTube Timestamp Saver",
         description:
